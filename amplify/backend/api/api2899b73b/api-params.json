@@ -1,0 +1,35 @@
+{
+    "paths": [
+        {
+            "name": "/visit",
+            "lambdaFunction": "apilambda",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/visit"
+        }
+    ],
+    "resourceName": "api2899b73b",
+    "apiName": "api2899b73b",
+    "functionArns": [
+        {
+            "lambdaFunction": "apilambda"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "amplify-glidaaamplify-dev-130011-authRole",
+        "unAuthRoleName": "amplify-glidaaamplify-dev-130011-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "apilambda",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}
