@@ -103,7 +103,7 @@ export default function Index() {
     const formSend = async () => {
       if (!email) return;
 
-      await fetch(`https://7s27p8vjkh.execute-api.us-east-1.amazonaws.com/live/visit?email=${email}`, {
+      await fetch(`https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/visit?email=${email}`, {
         mode: 'no-cors',
       });
     };

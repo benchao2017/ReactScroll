@@ -1,0 +1,26 @@
+{
+    "live": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-glidaaamplify-live-84208-authRole",
+            "UnauthRoleArn": "arn:aws:iam::476202956165:role/amplify-glidaaamplify-live-84208-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::476202956165:role/amplify-glidaaamplify-live-84208-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "amplify-glidaaamplify-live-84208-deployment",
+            "UnauthRoleName": "amplify-glidaaamplify-live-84208-unauthRole",
+            "StackName": "amplify-glidaaamplify-live-84208",
+            "StackId": "arn:aws:cloudformation:us-east-1:476202956165:stack/amplify-glidaaamplify-live-84208/05aac750-5e8d-11eb-80a5-0e7742256abf",
+            "AmplifyAppId": "dsqawqiqetm4f"
+        },
+        "categories": {
+            "function": {
+                "apilambda": {}
+            },
+            "hosting": {
+                "amplifyhosting": {
+                    "appId": "dsqawqiqetm4f",
+                    "type": "cicd"
+                }
+            }
+        }
+    }
+}

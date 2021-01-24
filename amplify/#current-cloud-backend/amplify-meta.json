@@ -1,0 +1,107 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-glidaaamplify-live-84208-authRole",
+      "UnauthRoleArn": "arn:aws:iam::476202956165:role/amplify-glidaaamplify-live-84208-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::476202956165:role/amplify-glidaaamplify-live-84208-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-glidaaamplify-live-84208-deployment",
+      "UnauthRoleName": "amplify-glidaaamplify-live-84208-unauthRole",
+      "StackName": "amplify-glidaaamplify-live-84208",
+      "StackId": "arn:aws:cloudformation:us-east-1:476202956165:stack/amplify-glidaaamplify-live-84208/05aac750-5e8d-11eb-80a5-0e7742256abf",
+      "AmplifyAppId": "dsqawqiqetm4f"
+    }
+  },
+  "storage": {
+    "UserVisits": {
+      "service": "DynamoDB",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "PartitionKeyName": "time",
+        "SortKeyName": "email",
+        "SortKeyType": "S",
+        "Region": "us-east-1",
+        "Arn": "arn:aws:dynamodb:us-east-1:476202956165:table/UserVisits-live",
+        "StreamArn": "arn:aws:dynamodb:us-east-1:476202956165:table/UserVisits-live/stream/2021-01-24T21:47:22.407",
+        "PartitionKeyType": "S",
+        "Name": "UserVisits-live"
+      },
+      "lastPushTimeStamp": "2021-01-24T21:54:15.713Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-glidaaamplify-live-84208-deployment/amplify-cfn-templates/storage/UserVisits-cloudformation-template.json",
+        "logicalId": "storageUserVisits"
+      },
+      "lastPushDirHash": "JOGQOsdu6TQZ60BercyWP6CxTJ8="
+    }
+  },
+  "function": {
+    "apilambda": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "storage",
+          "resourceName": "UserVisits",
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "attributeEnvMap": {
+            "Name": "TABLE_NAME",
+            "Arn": "TABLE_ARN"
+          }
+        }
+      ],
+      "output": {
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:476202956165:function:apilambda-live",
+        "Name": "apilambda-live",
+        "LambdaExecutionRole": "glidaaamplifyLambdaRole39306f04-live"
+      },
+      "lastPushTimeStamp": "2021-01-24T21:54:15.713Z",
+      "lastBuildTimeStamp": "2021-01-24T21:52:47.843Z",
+      "lastPackageTimeStamp": "2021-01-24T21:52:51.025Z",
+      "distZipFilename": "apilambda-6b5663512b715375436a-build.zip",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-glidaaamplify-live-84208-deployment/amplify-cfn-templates/function/apilambda-cloudformation-template.json",
+        "logicalId": "functionapilambda"
+      },
+      "lastPushDirHash": "x12yYyHUcxDLmdYRmlpods/A3iM="
+    }
+  },
+  "api": {
+    "api2899b73b": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "apilambda",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ],
+      "output": {
+        "ApiName": "api2899b73b",
+        "RootUrl": "https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live",
+        "ApiId": "i6smufsvj6"
+      },
+      "lastPushTimeStamp": "2021-01-24T21:54:15.713Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-glidaaamplify-live-84208-deployment/amplify-cfn-templates/api/api2899b73b-cloudformation-template.json",
+        "logicalId": "apiapi2899b73b"
+      },
+      "lastPushDirHash": "W/Pnc7IRmUHycmfwqt5LivOsJh8="
+    }
+  },
+  "hosting": {
+    "amplifyhosting": {
+      "service": "amplifyhosting",
+      "type": "cicd",
+      "lastPushTimeStamp": "2021-01-24T21:52:10.348Z"
+    }
+  }
+}
