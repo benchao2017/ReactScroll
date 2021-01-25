@@ -6,6 +6,7 @@ import '../../styles.css';
 import 'intersection-observer';
 import emailjs from 'emailjs-com';
 import { useParams } from 'react-router-dom';
+import CSVFileReader from '../../helper/CSVFileReader'
 
 // COMPONENTS...
 import StoreyTeller from '../storeyTeller';
@@ -121,7 +122,7 @@ export default function Index() {
           {`uniform vec3 color;\nvoid main() {\n\tif ( length( gl_PointCoord - vec2( 0.5, 0.5 ) ) > 0.475 ) discard;\n\tgl_FragColor = vec4( color, 1.0 );\n}`}
         </script>
       </Helmet>
-
+<CSVFileReader></CSVFileReader>
       <StoreyTeller />
 
       <div className="App">
