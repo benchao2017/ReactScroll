@@ -133,7 +133,7 @@ app.get(path, function (req, res) {
     } else {
       // Send email and text to all clients
       data.Items.forEach((user) => {
-        let phone = user.clientPhoneNumber;
+        let phone = user.phone;
         let email = user.email;
 
         if (phone) {
