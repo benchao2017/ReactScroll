@@ -128,7 +128,7 @@ app.get(path, function (req, res) {
 
 
   dynamodb.scan(params, function (err, data) {
-    if (err) {
+    if (err) {      
       console.error("Unable to read item. Error JSON:", JSON.stringify(err));
     } else {
       // Send email and text to all clients
@@ -150,7 +150,8 @@ app.get(path, function (req, res) {
 });
 
 app.post(pathCSVUpload, function (req, res) {
-  console.log(pathCSVUpload + "request start with data", req);
+  console.log(pathCSVUpload + "request start with data", JSON.stringify(req));
+  console.log(pathCSVUpload + "request body: ", req.body);
 
   var data = JSON.parse(req.body);
 
