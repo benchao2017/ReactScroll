@@ -171,6 +171,7 @@ app.post(pathCSVUpload, function (req, res) {
     // Storing the client data
     dynamodb.put(putItemParams, (err, _data) => {
       if (err) {
+        console.log("error from ddb: ", err);
         res.statusCode = 500;
         res.json({ error: err, url: req.url, body: req.body });
       } else {
