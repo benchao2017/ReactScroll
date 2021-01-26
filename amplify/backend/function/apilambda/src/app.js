@@ -153,7 +153,7 @@ app.post(pathCSVUpload, function (req, res) {
   console.log(pathCSVUpload + "request start with data", req);
   console.log(pathCSVUpload + "request body: ", req.body);
 
-  var data = JSON.parse(req.body);
+  var data = req.body;
 
   for (let i = 1; i < data.length; i++) {
     let phone = data[i].data[0];
