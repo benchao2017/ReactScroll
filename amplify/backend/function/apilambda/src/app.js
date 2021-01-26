@@ -150,7 +150,7 @@ app.get(path, function (req, res) {
 });
 
 app.post(pathCSVUpload, function (req, res) {
-  console.log(pathCSVUpload + "request start with data", JSON.stringify(req));
+  console.log(pathCSVUpload + "request start with data", req);
   console.log(pathCSVUpload + "request body: ", req.body);
 
   var data = JSON.parse(req.body);

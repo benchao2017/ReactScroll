@@ -17,11 +17,10 @@ export default class CSVFileReader extends Component {
     console.log(data)
     console.log('---------------------------')
 
-  
+
       const rawResponse = await fetch('https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/csvupload', {
         method: 'POST',
-        headers: {
-          'mode': 'no-cors',
+        headers: {       
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
