@@ -140,7 +140,7 @@ app.get(path, function (req, res) {
           sendText(phone);
         }
         if (email) {
-          sendEmail(emailemail);
+          sendEmail(email);
         }
       });
     }
