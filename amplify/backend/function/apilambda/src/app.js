@@ -160,8 +160,8 @@ app.post(pathCSVUpload, function (req, res) {
     let email = data[i].data[1];
 
     let item = {
-      clientEmail: phone,
-      clientPhoneNumber: email,
+      email: email,
+      phone: phone,
     };
     let putItemParams = {
       TableName: tableClients,
