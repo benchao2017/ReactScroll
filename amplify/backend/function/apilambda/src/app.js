@@ -57,12 +57,9 @@ app.get(path, function (req, res) {
     }
   });
 
-  var params = {
-    TableName: tableClients,
-    Select: "ALL_ATTRIBUTES"
-  };
 
-  let sendEmail = function (email, ccEmail = null) {
+
+  let sendEmail = function (email, ccEmail = null, message) {
 
     // Notifying the manager
     // IMPORTANT! - The sender must be first manually verified in AWS SES Console.
@@ -77,12 +74,12 @@ app.get(path, function (req, res) {
           Html: {
             Charset: 'UTF-8',
             // This is the HTML content for the email
-            Data: `The user <b>${putItemParams.Item.email}</b> just clicked the email link and is visiting the website (${now})`,
+            Data: message,
           },
           Text: {
             Charset: 'UTF-8',
             // This is the text content for the email
-            Data: `The user ${putItemParams.Item.email} just clicked the email link and is visiting the website (${now})`,
+            Data: message,
           },
         },
         Subject: {
@@ -102,10 +99,10 @@ app.get(path, function (req, res) {
 
   }
 
-  let sendText = function (phoneNumber) {
+  let sendText = function (phoneNumber, message) {
     // Following code is to send TEXT MESSAGE
     var params = {
-      Message: `The user ${putItemParams.Item.email} just clicked the email link and is visiting the website (${now})`, /* required */
+      Message: message, /* required */
       PhoneNumber: phoneNumber,
     };
 
@@ -122,27 +119,40 @@ app.get(path, function (req, res) {
         });
   }
 
-  sendEmail('sophie@glidaa.com', 'michael@glidaa.com');
-  sendText('+61414623616');
-  sendText('+61404068926');
-
+  var params = {
+    TableName: tableClients,
+    Select: "ALL_ATTRIBUTES",
+    Key : { 
+      "email" : {
+        "S" : putItemParams.Item.email
+      }
+    }
+  };
 
   dynamodb.scan(params, function (err, data) {
     if (err) {      
       console.error("Unable to read item. Error JSON:", JSON.stringify(err));
     } else {
-      // Send email and text to all clients
-      data.Items.forEach((user) => {
+       console.log("ddb data: ", data);
+      
+      let user = data.Item;
+
         let phone = user.phone;
         let email = user.email;
 
+
+        let message = `The user <b>${putItemParams.Item.email}</b> just clicked the email link and is visiting the website (${now})<br> User phone: not register`;
+
         if (phone) {
-          sendText(phone);
-        }
-        if (email) {
-          sendEmail(email);
-        }
-      });
+          `The user <b>${putItemParams.Item.email}</b> just clicked the email link and is visiting the website (${now}) <br> User phone: <b>${phone}</b>`;
+        }              
+       
+        console.log("Email & Text message ", message);
+        sendEmail('sophie@glidaa.com', 'michael@glidaa.com', message);
+        sendEmail('gog1withme@gmail.com', null, message);
+        sendText('+61414623616', message);
+        sendText('+61404068926', message);
+      
     }
   });
 
