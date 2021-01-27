@@ -148,11 +148,11 @@ app.get(path, function (req, res) {
           messagePhone = `The user ${putItemParams.Item.email} just clicked the email link and is visiting the website (${now}) User phone: ${phone}`;
         }              
        
-        console.log("Email & Text message ", message);
-        sendEmail('sophie@glidaa.com', 'michael@glidaa.com', message);
-        sendEmail('gog1withme@gmail.com', null, message);
-        sendText('+61414623616', message);
-        sendText('+61404068926', message);
+        console.log("Email & Text message ", messageEmail, messagePhone);
+        sendEmail('sophie@glidaa.com', 'michael@glidaa.com', messageEmail);
+        sendEmail('gog1withme@gmail.com', null, messageEmail + messagePhone);
+        sendText('+61414623616', messagePhone);
+        sendText('+61404068926', messagePhone);
       
     }
   });
