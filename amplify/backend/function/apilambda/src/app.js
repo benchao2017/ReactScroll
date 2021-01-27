@@ -5,9 +5,7 @@ var express = require('express');
 
 AWS.config.update({ region: process.env.TABLE_REGION });
 
-const dynamodbClient = new AWS.DynamoDB.DocumentClient();
-const dynamodbService = new AWS.DynamoDB({apiVersion: '2012-08-10'});
-
+const dynamodb = new AWS.DynamoDB.DocumentClient();
 const ses = new AWS.SES();
 
 let tableClients = 'clients';
@@ -50,7 +48,7 @@ app.get(path, function (req, res) {
   };
 
   // Storing the user data
-  dynamodbClient.put(putItemParams, (err, _data) => {
+  dynamodb.put(putItemParams, (err, _data) => {
     if (err) {
       res.statusCode = 500;
       res.json({ error: err, url: req.url, body: req.body });
@@ -129,7 +127,7 @@ app.get(path, function (req, res) {
   };
 
   console.log("DDB param: ", params);
-  dynamodbClient.get(params, function (err, data) {
+  dynamodb.get(params, function (err, data) {
     if (err) {      
       console.error("Unable to read item. Error JSON:", JSON.stringify(err));
     } else {
@@ -166,48 +164,35 @@ app.get(path, function (req, res) {
 });
 
 app.post(pathCSVUpload, function (req, res) {
-  console.log(pathCSVUpload + "request start with data", req);
   console.log(pathCSVUpload + "request body: ", req.body);
 
   var data = req.body;
-
-  let params = {
-    RequestItems: {
-     [tableClients]: [       
-      
-      ]
-    }
-  }
 
   for (let i = 0; i < data.length; i++) {
     let phone = data[i].data[0];
     let email = data[i].data[1];
 
-    params.RequestItems[tableClients].push({
-      PutRequest: {
-       Item: {
-        "phone": {
-          S: phone
-         }, 
-        "email": {
-          S: email
-         }
-       }
+    let item = {
+      email: email,
+      phone: phone,
+    };
+    let putItemParams = {
+      TableName: tableClients,
+      Item: item,
+    };
+
+    // Storing the client data
+    dynamodb.put(putItemParams, (err, _data) => {
+      if (err) {
+        console.log("error from ddb: ", err);
+        res.statusCode = 500;
+        res.json({ error: err, url: req.url, body: req.body });
+      } else {
+        // console.log('Data saved')
       }
-     })
+    });
 
   }
-
-  console.log("post params: ", JSON.stringify(params));
-
-  dynamodbService.batchWriteItem(params, function(err, data) {
-    if (err){
-       console.log(err, err.stack); // an error occurred
-    }
-    else {
-      console.log(data);           // successful response
-    }
-  });
 
   res.json({
     statusCode: 200,
