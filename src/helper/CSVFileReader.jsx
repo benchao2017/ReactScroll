@@ -1,118 +1,190 @@
-import React, { Component } from 'react'
 
+import React, { useState, useEffect } from 'react';
+import Table from 'react-bootstrap/Table'
 import { CSVReader } from 'react-papaparse'
+
+import Button from 'react-bootstrap/Button'
+import Toast from 'react-bootstrap/Toast'
+import ProgressBar from 'react-bootstrap/ProgressBar'
 
 const buttonRef = React.createRef()
 
-export default class CSVFileReader extends Component {
-  handleOpenDialog = (e) => {
+
+export default function CSVFileReader() {
+
+  const [showToaster, setshowToaster] = useState(false);
+  const showToast = () => setshowToaster(true);
+  const hideToast = () => setshowToaster(false);
+
+  const [showProgress, setshowProgress] = useState(false);
+
+  const [fileData, setFileData] = useState(null);
+
+  const handleOpenDialog = (e) => {
+    hideToast();
     // Note that the ref is set async, so it might be null at some point
     if (buttonRef.current) {
       buttonRef.current.open(e)
     }
   }
 
-  handleOnFileLoad = async (data) => {
-    console.log('---------------------------')
-    console.log(data)
-    console.log('---------------------------')
+  const handleOnFileLoad = async (data) => {
+    hideToast();
 
+    setFileData(data);
 
-      const rawResponse = await fetch('https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/csvupload', {
-        method: 'POST',
-        headers: {       
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
-      const content = await rawResponse.json();
-    
-      console.log("uploaded");
-   
   }
 
-  handleOnError = (err, file, inputElem, reason) => {
+  const handleUploadFile = async () => {
+    hideToast();
+    setshowProgress(true);
+    console.log('---------------------------')
+    console.log(fileData)
+    console.log('---------------------------')
+
+    const rawResponse = await fetch('https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/csvupload', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(fileData)
+    });
+    const content = await rawResponse.json();
+
+    if (content.statusCode == 200) {
+      showToast();
+      setshowProgress(false);
+    }
+    console.log("uploaded", content);
+  }
+
+  const handleOnError = (err, file, inputElem, reason) => {
     console.log(err)
+    setshowProgress(false);
+
   }
 
-  handleOnRemoveFile = (data) => {
+  const handleOnRemoveFile = (data) => {
+    hideToast();
     console.log('---------------------------')
     console.log(data)
     console.log('---------------------------')
+
+    setFileData(null);
   }
 
-  handleRemoveFile = (e) => {
+  const handleRemoveFile = (e) => {
     // Note that the ref is set async, so it might be null at some point
     if (buttonRef.current) {
       buttonRef.current.removeFile(e)
     }
   }
 
-  render() {
-    return (
+  return (
+    <div className="fileuploader-contaner">
+      <h4>Browse & upload</h4>
       <CSVReader
         ref={buttonRef}
-        onFileLoad={this.handleOnFileLoad}
-        onError={this.handleOnError}
+        onFileLoad={handleOnFileLoad}
+        onError={handleOnError}
         noClick
         noDrag
-        onRemoveFile={this.handleOnRemoveFile}
+        onRemoveFile={handleOnRemoveFile}
       >
         {({ file }) => (
-          <aside
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              marginBottom: 20,
-              marginTop: 50,
-            }}
-          >
-            <button
-              type='button'
-              onClick={this.handleOpenDialog}
+          <div className="filecontrol-container">
+            <aside
               style={{
-                borderRadius: 0,
-                marginLeft: 0,
-                marginRight: 0,
-                width: '40%',
-                paddingLeft: 0,
-                paddingRight: 0
+                display: 'flex',
+                flexDirection: 'row',
+                marginBottom: 20,
+                marginTop: 50,
               }}
             >
-              Browse file
+              <button
+                type='button'
+                onClick={handleOpenDialog}
+                style={{
+                  // borderRadius: 0,
+                  // marginLeft: 0,
+                  // marginRight: 0,
+                  // width: '40%',
+                  // paddingLeft: 0,
+                  // paddingRight: 0
+                }}
+              >
+                Browse file
             </button>
-            <div
-              style={{
-                borderWidth: 1,
-                borderStyle: 'solid',
-                borderColor: '#ccc',
-                height: 45,
-                lineHeight: 2.5,
-                marginTop: 5,
-                marginBottom: 5,
-                paddingLeft: 13,
-                paddingTop: 3,
-                width: '60%'
-              }}
-            >
-              {file && file.name}
-            </div>
-            {/* <button
-              style={{
-                borderRadius: 0,
-                marginLeft: 0,
-                marginRight: 0,
-                paddingLeft: 20,
-                paddingRight: 20
-              }}
-              onClick={this.handleRemoveFile}
-            >
-              Remove
-            </button> */}
-          </aside>
+              <div
+                style={{
+                  borderWidth: 1,
+                  borderStyle: 'solid',
+                  borderColor: '#ccc',
+                  height: 45,
+                  lineHeight: 2.5,
+                  marginTop: 5,
+                  marginBottom: 5,
+                  paddingLeft: 13,
+                  paddingTop: 3,
+                  width: '60%'
+                }}
+              >
+                {file && file.name}
+              </div>
+
+            </aside>
+
+          </div>
         )}
+
       </CSVReader>
-    )
-  }
+
+      <div>
+        {showProgress && <ProgressBar animated striped variant="success" now={100} />}
+        {fileData && <div className="margin-b-10 margin-t-10">
+          <Button variant="danger" onClick={handleRemoveFile}>Remove</Button> <Button onClick={handleUploadFile} variant="success">Upload</Button></div>}
+        <Table striped bordered hover size="sm">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>{fileData && fileData[0]?.data[0]}</th>
+              <th>{fileData && fileData[0]?.data[1]}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {fileData?.slice(1).map((x, i) => {
+              return <tr key={i}>
+                <td>{i + 1}</td>
+                <td>{x.data[0]}</td>
+                <td>{x.data[1]}</td>
+              </tr>
+            })}
+          </tbody>
+        </Table>
+        <Toast style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          background: 'greenyellow'
+        }} show={showToaster} onClose={hideToast}>
+          <Toast.Header>
+            <img
+              src="holder.js/20x20?text=%20"
+              className="rounded mr-2"
+              alt=""
+            />
+            <strong className="mr-auto">Success</strong>
+            <small>Just now</small>
+          </Toast.Header>
+          <Toast.Body>File uploaded successfully!</Toast.Body>
+        </Toast>
+
+      </div>
+
+
+    </div>
+
+
+  )
 }

@@ -11,3 +11,27 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.filecontrol-container
+{
+  max-width: 500px;
+}
+
+.filecontrol-container button
+{
+  width: 250px;
+    height: 45px;
+    margin-top: 4px;
+}
+
+.fileuploader-contaner{
+  margin:40px;
+}
+
+.margin-b-10{
+  margin-bottom: 10px;
+}
+
+.margin-t-10{
+  margin-top: 10px;
+}
