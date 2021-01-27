@@ -130,22 +130,25 @@ app.get(path, function (req, res) {
   };
 
   console.log("DDB param: ", params);
-  dynamodb.scan(params, function (err, data) {
+  dynamodb.getItem(params, function (err, data) {
     if (err) {      
       console.error("Unable to read item. Error JSON:", JSON.stringify(err));
     } else {
        console.log("ddb data: ", data);
       
-      let user = data.Items[0];
+      let user = data.Item;
 
         let phone = user.phone;
         let email = user.email;
 
 
-        let message = `The user <b>${putItemParams.Item.email}</b> just clicked the email link and is visiting the website (${now})<br> User phone: not registered`;
+        let messagePhone = `The user ${putItemParams.Item.email} just clicked the email link and is visiting the website (${now}) User phone: not registered`;
+
+        let messageEmail = `The user <b>${putItemParams.Item.email}</b> just clicked the email link and is visiting the website (${now})<br> User phone: not registered`;
 
         if (phone) {
-          message = `The user <b>${putItemParams.Item.email}</b> just clicked the email link and is visiting the website (${now}) <br> User phone: <b>${phone}</b>`;
+          messageEmail = `The user <b>${putItemParams.Item.email}</b> just clicked the email link and is visiting the website (${now}) <br> User phone: <b>${phone}</b>`;
+          messagePhone = `The user ${putItemParams.Item.email} just clicked the email link and is visiting the website (${now}) User phone: ${phone}`;
         }              
        
         console.log("Email & Text message ", message);
