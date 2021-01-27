@@ -198,7 +198,7 @@ app.post(pathCSVUpload, function (req, res) {
 
   }
 
-  console.log("post params: ", params);
+  console.log("post params: ", JSON.stringify(params));
 
   dynamodbService.batchWriteItem(params, function(err, data) {
     if (err){
