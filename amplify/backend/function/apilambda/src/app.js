@@ -135,8 +135,10 @@ app.get(path, function (req, res) {
       
       let user = data.Item;
 
-        let phone = user.phone;
-        let email = user.email;
+        let phone = null;
+        if(user){
+        phone = user.phone;
+        }
 
 
         let messagePhone = `The user ${putItemParams.Item.email} just clicked the email link and is visiting the website (${now}) User phone: not registered`;
