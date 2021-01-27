@@ -124,11 +124,12 @@ app.get(path, function (req, res) {
     Select: "ALL_ATTRIBUTES",
     Key : { 
       "email" : {
-        "S" : putItemParams.Item.email
+        "S" : req.query.email
       }
     }
   };
 
+  console.log("DDB param: ", params);
   dynamodb.scan(params, function (err, data) {
     if (err) {      
       console.error("Unable to read item. Error JSON:", JSON.stringify(err));
@@ -190,6 +191,10 @@ app.post(pathCSVUpload, function (req, res) {
     });
 
   }
+
+  res.json({
+    statusCode: 200,
+  });
 });
 
 app.listen(3000, function () {
