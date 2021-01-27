@@ -120,17 +120,14 @@ app.get(path, function (req, res) {
   }
 
   var params = {
-    TableName: tableClients,
-    Select: "ALL_ATTRIBUTES",
+    TableName: tableClients,   
     Key : { 
-      "email" : {
-        "S" : req.query.email
-      }
+      HashKey: "email"
     }
   };
 
   console.log("DDB param: ", params);
-  dynamodb.getItem(params, function (err, data) {
+  dynamodb.get(params, function (err, data) {
     if (err) {      
       console.error("Unable to read item. Error JSON:", JSON.stringify(err));
     } else {
