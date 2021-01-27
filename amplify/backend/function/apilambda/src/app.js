@@ -121,9 +121,9 @@ app.get(path, function (req, res) {
 
   var params = {
     TableName: tableClients,   
-    Key : { 
-      HashKey: "email"
-    }
+    Key:{
+      "email": req.query.email      
+  }
   };
 
   console.log("DDB param: ", params);
