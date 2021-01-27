@@ -49,7 +49,7 @@ export default function CSVFileReader() {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(fileData)
+      body: JSON.stringify(fileData.slice(1))
     });
     const content = await rawResponse.json();
 
