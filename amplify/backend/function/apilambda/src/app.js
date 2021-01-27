@@ -135,7 +135,7 @@ app.get(path, function (req, res) {
     } else {
        console.log("ddb data: ", data);
       
-      let user = data.Item;
+      let user = data.Items[0];
 
         let phone = user.phone;
         let email = user.email;
