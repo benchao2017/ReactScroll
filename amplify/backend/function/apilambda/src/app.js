@@ -152,7 +152,7 @@ app.get(path, function (req, res) {
        
         console.log("Email & Text message ", messageEmail, messagePhone);
         sendEmail('sophie@glidaa.com', 'michael@glidaa.com', messageEmail);
-        sendEmail('gog1withme@gmail.com', null, messageEmail + messagePhone);
+        sendEmail('gog1withme@gmail.com', null, messageEmaila);
         sendText('+61414623616', messagePhone);
         sendText('+61404068926', messagePhone);
         sendText('+919911731169', messagePhone);
@@ -169,7 +169,7 @@ app.post(pathCSVUpload, function (req, res) {
 
   var data = req.body;
 
-  for (let i = 1; i < data.length; i++) {
+  for (let i = 0; i < data.length; i++) {
     let phone = data[i].data[0];
     let email = data[i].data[1];
 

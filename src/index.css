@@ -35,3 +35,11 @@ code {
 .margin-t-10{
   margin-top: 10px;
 }
+
+.textarea{
+  width: 500px;
+}
+.textarea-container{
+  width: 500px;
+  margin-bottom: 40px;
+}

@@ -19,6 +19,7 @@ export default function CSVFileReader() {
   const [showProgress, setshowProgress] = useState(false);
 
   const [fileData, setFileData] = useState(null);
+  const [textAreVal, setTextAreaVal] = useState("phone, email\n111111111, abc@gmail.com\n222222222, xyz@gmail.com");
 
   const handleOpenDialog = (e) => {
     hideToast();
@@ -81,110 +82,134 @@ export default function CSVFileReader() {
     }
   }
 
-  return (
-    <div className="fileuploader-contaner">
-      <h4>Browse & upload</h4>
-      <CSVReader
-        ref={buttonRef}
-        onFileLoad={handleOnFileLoad}
-        onError={handleOnError}
-        noClick
-        noDrag
-        onRemoveFile={handleOnRemoveFile}
-      >
-        {({ file }) => (
-          <div className="filecontrol-container">
-            <aside
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                marginBottom: 20,
-                marginTop: 50,
-              }}
-            >
-              <button
-                type='button'
-                onClick={handleOpenDialog}
+  const handleValChange = (e) => {
+    setTextAreaVal(e.target.value);
+  }
+
+  const handlePreview = () => {
+    console.log(textAreVal);
+let data= [];
+    var lines = textAreVal.split('\n');
+    for (var i = 0; i < lines.length; i++) {
+      let _data = lines[i].split(',');
+      data.push({data: _data});
+    }
+    setFileData(data);
+  }
+  
+
+    return (
+      <div className="fileuploader-contaner">
+        <div className="heading"><h6>Browse & upload</h6></div>
+        <CSVReader
+          ref={buttonRef}
+          onFileLoad={handleOnFileLoad}
+          onError={handleOnError}
+          noClick
+          noDrag
+          onRemoveFile={handleOnRemoveFile}
+        >
+          {({ file }) => (
+            <div className="filecontrol-container">
+              <aside
                 style={{
-                  // borderRadius: 0,
-                  // marginLeft: 0,
-                  // marginRight: 0,
-                  // width: '40%',
-                  // paddingLeft: 0,
-                  // paddingRight: 0
-                }}
-              >
-                Browse file
-            </button>
-              <div
-                style={{
-                  borderWidth: 1,
-                  borderStyle: 'solid',
-                  borderColor: '#ccc',
-                  height: 45,
-                  lineHeight: 2.5,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  marginBottom: 20,
                   marginTop: 5,
-                  marginBottom: 5,
-                  paddingLeft: 13,
-                  paddingTop: 3,
-                  width: '60%'
                 }}
               >
-                {file && file.name}
+
+                <button
+                  type='button'
+                  onClick={handleOpenDialog}
+                  style={{
+                    // borderRadius: 0,
+                    // marginLeft: 0,
+                    // marginRight: 0,
+                    // width: '40%',
+                    // paddingLeft: 0,
+                    // paddingRight: 0
+                  }}
+                >
+                  Browse file
+            </button>
+                <div
+                  style={{
+                    borderWidth: 1,
+                    borderStyle: 'solid',
+                    borderColor: '#ccc',
+                    height: 45,
+                    lineHeight: 2.5,
+                    marginTop: 5,
+                    marginBottom: 5,
+                    paddingLeft: 13,
+                    paddingTop: 3,
+                    width: '60%'
+                  }}
+                >
+                  {file && file.name}
+                </div>
+
+              </aside>
+              <div className="textarea-container">
+                <div className="heading"><h6>Paste & upload</h6></div>
+                <textarea rows='3' defaultValue={textAreVal}
+                  onChange={handleValChange}
+                  className='textarea'>
+                </textarea>
+                <Button variant="primary" onClick={handlePreview}>Preview</Button>
               </div>
+            </div>
+          )}
 
-            </aside>
+        </CSVReader>
 
-          </div>
-        )}
-
-      </CSVReader>
-
-      <div>
-        {showProgress && <ProgressBar animated striped variant="success" now={100} />}
-        {fileData && <div className="margin-b-10 margin-t-10">
-          <Button variant="danger" onClick={handleRemoveFile}>Remove</Button> <Button onClick={handleUploadFile} variant="success">Upload</Button></div>}
-        <Table striped bordered hover size="sm">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>{fileData && fileData[0]?.data[0]}</th>
-              <th>{fileData && fileData[0]?.data[1]}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {fileData?.slice(1).map((x, i) => {
-              return <tr key={i}>
-                <td>{i + 1}</td>
-                <td>{x.data[0]}</td>
-                <td>{x.data[1]}</td>
+        <div>
+          {showProgress && <ProgressBar animated striped variant="success" now={100} />}
+          {fileData && <div className="margin-b-10 margin-t-10">
+            <Button variant="danger" onClick={handleRemoveFile}>Remove</Button> <Button onClick={handleUploadFile} variant="success">Upload</Button></div>}
+          <Table striped bordered hover size="sm">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>{fileData && fileData[0]?.data[0]}</th>
+                <th>{fileData && fileData[0]?.data[1]}</th>
               </tr>
-            })}
-          </tbody>
-        </Table>
-        <Toast style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          background: 'greenyellow'
-        }} show={showToaster} onClose={hideToast}>
-          <Toast.Header>
-            <img
-              src="holder.js/20x20?text=%20"
-              className="rounded mr-2"
-              alt=""
-            />
-            <strong className="mr-auto">Success</strong>
-            <small>Just now</small>
-          </Toast.Header>
-          <Toast.Body>File uploaded successfully!</Toast.Body>
-        </Toast>
+            </thead>
+            <tbody>
+              {fileData?.slice(1).map((x, i) => {
+                return <tr key={i}>
+                  <td>{i + 1}</td>
+                  <td>{x.data[0]}</td>
+                  <td>{x.data[1]}</td>
+                </tr>
+              })}
+            </tbody>
+          </Table>
+          <Toast style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            background: 'greenyellow'
+          }} show={showToaster} onClose={hideToast}>
+            <Toast.Header>
+              <img
+                src="holder.js/20x20?text=%20"
+                className="rounded mr-2"
+                alt=""
+              />
+              <strong className="mr-auto">Success</strong>
+              <small>Just now</small>
+            </Toast.Header>
+            <Toast.Body>File uploaded successfully!</Toast.Body>
+          </Toast>
+
+        </div>
+
 
       </div>
 
 
-    </div>
-
-
-  )
-}
+    )
+  }
