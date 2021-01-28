@@ -159,14 +159,22 @@ app.get(path, function (req, res) {
         } else {
           console.log("ddb data: ", data);
 
-          let user = data.Item;
+          var user = data.Item;
           if (!req.query.existingUser) {
             sendMessages(user, (userData) => {
-              res.json({ data: userData });
+              res.json({ 
+                "statusCode": 200,
+                "body": JSON.stringify(user),
+                "isBase64Encoded": false
+                });
             });
           } else {
             console.log("Old user: ", user);
-            res.json({ data: user });
+            res.json({ 
+              "statusCode": 200,
+              "body": JSON.stringify(user),
+              "isBase64Encoded": false
+              });
           }
         }
       });
