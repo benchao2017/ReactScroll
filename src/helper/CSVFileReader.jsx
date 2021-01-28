@@ -39,7 +39,7 @@ export default function CSVFileReader() {
       text += x.data[0] + " " + x.data[1] + "\n"
     });
 
-    handleValChange("asdfasdf");
+    setTextAreaVal(text.slice(0, -1));
   }
 
   const handleUploadFile = async () => {
@@ -160,7 +160,7 @@ export default function CSVFileReader() {
             </aside>
             <div className="textarea-container">
               <div className="heading"><h6>Paste & upload</h6></div>
-              <textarea rows='3' defaultValue={textAreVal}
+              <textarea rows='3' value={textAreVal}
                 onChange={handleValChange}
                 className='textarea'>
               </textarea>

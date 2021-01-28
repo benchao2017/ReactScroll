@@ -105,15 +105,17 @@ app.get(path, function (req, res) {
       phone = user.phone;
     }
 
-
-    let messagePhone = `The user ${putItemParams.Item.email} just clicked the email link and is visiting the website (${now}) User phone: not registered`;
-
-    let messageEmail = `The user <b>${putItemParams.Item.email}</b> just clicked the email link and is visiting the website (${now})<br> User phone: not registered`;
-
-    if (phone) {
-      messageEmail = `The user <b>${putItemParams.Item.email}</b> just clicked the email link and is visiting the website (${now}) <br> User phone: <b>${phone}</b>`;
-      messagePhone = `The user ${putItemParams.Item.email} just clicked the email link and is visiting the website (${now}) User phone: ${phone}`;
+    if (!phone) {
+      phone = "Not registered";
     }
+
+    let email = putItemParams.Item.email;
+
+    let messagePhone = `The user ${email} just clicked the email link and is visiting the website (${now}) User phone: ${phone}  click here to see page https://explainerpage.com/admin/control/${email}`;
+
+    let messageEmail = `The user <b>${email}</b> just clicked the email link and is visiting the website (${now})<br> User phone: ${phone} <br> click here to see page https://explainerpage.com/admin/control/${email}`;
+
+ 
 
     console.log("Email & Text message ", messageEmail, messagePhone);
     let p1 = sendEmail('sophie@glidaa.com', 'michael@glidaa.com', messageEmail);
