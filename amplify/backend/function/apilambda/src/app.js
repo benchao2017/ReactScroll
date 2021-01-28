@@ -153,7 +153,7 @@ app.get(path, function (req, res) {
       };
 
       console.log("DDB param: ", params);
-      dynamodbClient.get(params, function (err, data) {
+      dynamodbClient.get(params, (err, data) => {
         if (err) {
           console.error("Unable to read item. Error JSON:", JSON.stringify(err));
         } else {
@@ -165,6 +165,7 @@ app.get(path, function (req, res) {
               res.json({ data: userData });
             });
           } else {
+            console.log("Old user: ", user);
             res.json({ data: user });
           }
         }
