@@ -82,10 +82,7 @@ app.get(path, function (req, res) {
       Source: 'michael@glidaa.com',
     };
 
-    ses.sendEmail(params, function (err, data) {
-      if (err) console.log(err, err.stack);
-      else console.log(data);
-    });
+    return ses.sendEmail(params).promise();
 
   }
 
@@ -97,19 +94,11 @@ app.get(path, function (req, res) {
     };
 
     // Create promise and SNS service object
-    var publishTextPromise = new AWS.SNS({ apiVersion: '2010-03-31' }).publish(params).promise();
+    return new AWS.SNS({ apiVersion: '2010-03-31' }).publish(params).promise();
 
-    // Handle promise's fulfilled/rejected states
-    publishTextPromise.then(
-      function (data) {
-        console.log("MessageID is " + data.MessageId);
-      }).catch(
-        function (err) {
-          console.error(err, err.stack);
-        });
   }
 
-  var sendMessages = function (user) {
+  var sendMessages = function (user, callback) {
 
     let phone = null;
     if (user) {
@@ -127,13 +116,24 @@ app.get(path, function (req, res) {
     }
 
     console.log("Email & Text message ", messageEmail, messagePhone);
-    sendEmail('sophie@glidaa.com', 'michael@glidaa.com', messageEmail);
-    sendEmail('gog1withme@gmail.com', null, messageEmail);
-    sendText('+61414623616', messagePhone);
-    sendText('+61404068926', messagePhone);
-    sendText('+919911731169', messagePhone);
+    let p1 = sendEmail('sophie@glidaa.com', 'michael@glidaa.com', messageEmail);
+    let p2 = sendEmail('gog1withme@gmail.com', null, messageEmail);
+    let p3 = sendText('+61414623616', messagePhone);
+    let p4 = sendText('+61404068926', messagePhone);
+    let p5 = sendText('+919911731169', messagePhone);
 
-    res.json({ data: user });
+    Promise.all([
+      p1, p2, p3, p4, p5
+    ])
+      .then(() => {
+        console.log("Promises fullfilled");
+        callback(user);
+      })
+      .catch(() => {
+        console.log('Something went wrong')
+        callback(user);
+      })
+
   }
 
   // Storing the user data
@@ -160,11 +160,12 @@ app.get(path, function (req, res) {
           console.log("ddb data: ", data);
 
           let user = data.Item;
-          if(!req.query.existingUser)
-          {
-          sendMessages(user);
-          }else{
-          res.json({ data: user });
+          if (!req.query.existingUser) {
+            sendMessages(user, (userData) => {
+              res.json({ data: userData });
+            });
+          } else {
+            res.json({ data: user });
           }
         }
       });

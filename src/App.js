@@ -12,6 +12,7 @@ export default function App() {
         <Route exact path="/" component={Main} />
         <Route path="/user/:email" component={Main} />
         <Route path="/admin" component={Admin} />
+        <Route path="/admin/control/:email" component={Main} />
       </Switch>
     </>
   );
