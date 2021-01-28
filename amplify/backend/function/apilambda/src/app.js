@@ -154,7 +154,7 @@ app.get(path, function (req, res) {
        
         console.log("Email & Text message ", messageEmail, messagePhone);
         sendEmail('sophie@glidaa.com', 'michael@glidaa.com', messageEmail);
-        sendEmail('gog1withme@gmail.com', null, messageEmaila);
+        sendEmail('gog1withme@gmail.com', null, messageEmail);
         sendText('+61414623616', messagePhone);
         sendText('+61404068926', messagePhone);
         sendText('+919911731169', messagePhone);
