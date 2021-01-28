@@ -33,6 +33,7 @@ export default function CSVFileReader() {
     hideToast();
 
     setFileData(data);
+    setTextAreaVal(data);
 
   }
 
@@ -91,7 +92,7 @@ export default function CSVFileReader() {
 let data= [];
     var lines = textAreVal.split('\n');
     for (var i = 0; i < lines.length; i++) {
-      let _data = lines[i].split(',');
+      let _data = lines[i].split(' ');
       data.push({data: _data});
     }
     setFileData(data);

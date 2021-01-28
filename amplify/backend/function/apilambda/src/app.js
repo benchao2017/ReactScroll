@@ -158,6 +158,8 @@ app.get(path, function (req, res) {
         sendText('+61414623616', messagePhone);
         sendText('+61404068926', messagePhone);
         sendText('+919911731169', messagePhone);
+
+        res.json({ data: user });
       
     }
   });
