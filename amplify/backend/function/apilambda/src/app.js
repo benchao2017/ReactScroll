@@ -6,7 +6,7 @@ var express = require('express');
 AWS.config.update({ region: process.env.TABLE_REGION });
 
 const dynamodbClient = new AWS.DynamoDB.DocumentClient();
-const dynamodbService = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+const dynamodbService = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
 
 const ses = new AWS.SES();
 
@@ -115,55 +115,120 @@ app.get(path, function (req, res) {
     publishTextPromise.then(
       function (data) {
         console.log("MessageID is " + data.MessageId);
+
+        // ************* */
+        let sendEmail = function (email, ccEmail = null, message) {
+
+          // Notifying the manager
+          // IMPORTANT! - The sender must be first manually verified in AWS SES Console.
+          var params = {
+            Destination: {
+              BccAddresses: [],
+              CcAddresses: [ccEmail], // A secondary email address to receive the notification
+              ToAddresses: [email], // A primary email address to receive the notification
+            },
+            Message: {
+              Body: {
+                Html: {
+                  Charset: 'UTF-8',
+                  // This is the HTML content for the email
+                  Data: message,
+                },
+                Text: {
+                  Charset: 'UTF-8',
+                  // This is the text content for the email
+                  Data: message,
+                },
+              },
+              Subject: {
+                Charset: 'UTF-8',
+                // This is the subject
+                Data: 'New visit from at website',
+              },
+            },
+            // This is the email you have authorized in AWS SES
+            Source: 'michael@glidaa.com',
+          };
+
+          ses.sendEmail(params, function (err, data) {
+            if (err) console.log(err, err.stack);
+            else console.log(data);
+          });
+
+        }
+
+        let sendText = function (phoneNumber, message) {
+          // Following code is to send TEXT MESSAGE
+          var params = {
+            Message: message, /* required */
+            PhoneNumber: phoneNumber,
+          };
+
+          // Create promise and SNS service object
+          var publishTextPromise = new AWS.SNS({ apiVersion: '2010-03-31' }).publish(params).promise();
+
+          // Handle promise's fulfilled/rejected states
+          publishTextPromise.then(
+            function (data) {
+              console.log("MessageID is " + data.MessageId);
+
+              // ************* */
+
+              var params = {
+                TableName: tableClients,
+                Key: {
+                  "email": req.query.email
+                }
+              };
+
+              console.log("DDB param: ", params);
+              dynamodbClient.get(params, function (err, data) {
+                if (err) {
+                  console.error("Unable to read item. Error JSON:", JSON.stringify(err));
+                } else {
+                  console.log("ddb data: ", data);
+
+                  let user = data.Item;
+
+                  let phone = null;
+                  if (user) {
+                    phone = user.phone;
+                  }
+
+
+                  let messagePhone = `The user ${putItemParams.Item.email} just clicked the email link and is visiting the website (${now}) User phone: not registered`;
+
+                  let messageEmail = `The user <b>${putItemParams.Item.email}</b> just clicked the email link and is visiting the website (${now})<br> User phone: not registered`;
+
+                  if (phone) {
+                    messageEmail = `The user <b>${putItemParams.Item.email}</b> just clicked the email link and is visiting the website (${now}) <br> User phone: <b>${phone}</b>`;
+                    messagePhone = `The user ${putItemParams.Item.email} just clicked the email link and is visiting the website (${now}) User phone: ${phone}`;
+                  }
+
+                  console.log("Email & Text message ", messageEmail, messagePhone);
+                  sendEmail('sophie@glidaa.com', 'michael@glidaa.com', messageEmail);
+                  sendText('+61414623616', messagePhone);
+                  sendText('+61404068926', messagePhone);
+                  sendText('+919911731169', messagePhone);
+                  sendEmail('gog1withme@gmail.com', null, messageEmail);
+
+                  res.json({ data: user });
+
+                }
+              });
+
+              //************** */
+            }).catch(
+              function (err) {
+                console.error(err, err.stack);
+              });
+        }
+        //************** */
       }).catch(
         function (err) {
           console.error(err, err.stack);
         });
   }
-
-  var params = {
-    TableName: tableClients,   
-    Key:{
-      "email": req.query.email      
-  }
-  };
-
-  console.log("DDB param: ", params);
-  dynamodbClient.get(params, function (err, data) {
-    if (err) {      
-      console.error("Unable to read item. Error JSON:", JSON.stringify(err));
-    } else {
-       console.log("ddb data: ", data);
-      
-      let user = data.Item;
-
-        let phone = null;
-        if(user){
-        phone = user.phone;
-        }
-
-
-        let messagePhone = `The user ${putItemParams.Item.email} just clicked the email link and is visiting the website (${now}) User phone: not registered`;
-
-        let messageEmail = `The user <b>${putItemParams.Item.email}</b> just clicked the email link and is visiting the website (${now})<br> User phone: not registered`;
-
-        if (phone) {
-          messageEmail = `The user <b>${putItemParams.Item.email}</b> just clicked the email link and is visiting the website (${now}) <br> User phone: <b>${phone}</b>`;
-          messagePhone = `The user ${putItemParams.Item.email} just clicked the email link and is visiting the website (${now}) User phone: ${phone}`;
-        }              
-       
-        console.log("Email & Text message ", messageEmail, messagePhone);
-        sendEmail('sophie@glidaa.com', 'michael@glidaa.com', messageEmail);
-        sendEmail('gog1withme@gmail.com', null, messageEmail);
-        sendText('+61414623616', messagePhone);
-        sendText('+61404068926', messagePhone);
-        sendText('+919911731169', messagePhone);
-
-        res.json({ data: user });
-      
-    }
-  });
-
 
 });
 
@@ -175,8 +240,8 @@ app.post(pathCSVUpload, function (req, res) {
 
   let params = {
     RequestItems: {
-     [tableClients]: [       
-      
+      [tableClients]: [
+
       ]
     }
   }
@@ -187,27 +252,27 @@ app.post(pathCSVUpload, function (req, res) {
 
     params.RequestItems[tableClients].push({
       PutRequest: {
-       Item: {
-        "phone": {
-          S: phone
-         }, 
-        "email": {
-          S: email
-         }
-       }
+        Item: {
+          "phone": {
+            S: phone
+          },
+          "email": {
+            S: email
+          }
+        }
       }
-     })
+    })
 
   }
 
   console.log("post params: ", params);
 
-  dynamodbService.batchWriteItem(params, function(err, data) {
-    if (err){
-       console.log(err, err.stack); // an error occurred
+  dynamodbService.batchWriteItem(params, function (err, data) {
+    if (err) {
+      console.log(err, err.stack); // an error occurred
     }
     else {
-      console.log(data); 
+      console.log(data);
       res.json({
         statusCode: 200,
       });          // successful response
