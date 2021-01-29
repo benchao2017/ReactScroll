@@ -1,15 +1,22 @@
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame } from 'react-three-fiber';
 import { Helmet } from 'react-helmet';
 import * as THREE from 'three';
 import '../../styles.css';
 import 'intersection-observer';
-import emailjs from 'emailjs-com';
 import { useParams } from 'react-router-dom';
-
-
+import Amplify, { API, graphqlOperation } from 'aws-amplify'
+import { updateUserActivity, createUserActivity } from '../../graphql/mutations'
+import awsExports from '../../aws-exports';
 // COMPONENTS...
 import StoreyTeller from '../storeyTeller';
+
+Amplify.configure({
+  ...awsExports,
+  Analytics: {
+    disabled: true
+  }
+});
 
 const numParticles = 2500;
 
@@ -100,7 +107,34 @@ const Map = (props) => {
 export default function Index() {
   const { email } = useParams();
 
+    const [mousePosition, setMousePosition] = useState({ x: null, y: null });
+  
+    const updateMousePosition = async (ev) => {
+      if (!email) return;
+      
+      setMousePosition({ x: ev.clientX, y: ev.clientY });
+
+      var d = new Date();
+      var n = d.getTime();
+      let payload = { id: email, cursorPosition: `${ev.clientX},${ev.clientY}` };
+      try {
+        let { data } = await API.graphql(graphqlOperation(updateUserActivity, { input: payload }));
+      } catch {
+        let { data } = await API.graphql(graphqlOperation(createUserActivity, { input: payload }));
+
+      }
+
+    };
+  
+    useEffect(() => {
+      window.addEventListener("mousemove", updateMousePosition);
+  
+      return () => window.removeEventListener("mousemove", updateMousePosition);
+    }, []);
+
   useEffect(() => {
+
+
     const formSend = async () => {
       if (!email) return;
 

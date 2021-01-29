@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Root Stack for AWS Amplify CLI",
+  "Description": "Root Stack for AWS Amplify Console",
   "Parameters": {
     "DeploymentBucketName": {
       "Description": "Name of the common deployment bucket provided by the parent stack",
@@ -126,6 +126,21 @@
               "Outputs.Arn"
             ]
           },
+          "env": "live"
+        }
+      }
+    },
+    "apiMonitorAPI": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-glidaaamplify-live-84208-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "Parameters": {
+          "CreateAPIKey": 1,
+          "AppSyncApiName": "MonitorAPI",
+          "DynamoDBBillingMode": "PAY_PER_REQUEST",
+          "DynamoDBEnableServerSideEncryption": false,
+          "S3DeploymentBucket": "amplify-glidaaamplify-live-84208-deployment",
+          "S3DeploymentRootKey": "amplify-appsync-files/5e6ff16bb0f7eb3fb77ab8ab1530c5496ee37cc9",
           "env": "live"
         }
       }

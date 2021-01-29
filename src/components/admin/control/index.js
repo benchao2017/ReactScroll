@@ -1,12 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Card from 'react-bootstrap/Card'
+import Amplify, {API, graphqlOperation} from 'aws-amplify'
+import { onUpdateUserActivity } from '../../../graphql/subscriptions'
+
+import awsExports from '../../../aws-exports';
+Amplify.configure({
+   ...awsExports,
+   Analytics: { 
+       disabled: true
+   }
+});
 
 
 export default function Index() {
   const { email } = useParams();
 
   const [loading, setLoading] = useState("Loading user detail ......");
+
+  const [user, setUser] = useState({});
+  const [userActivityDetails, setUserActivityDetails] = useState(null);
+
   const setStillLoading = () => {
     setLoading("Loading user detail ......");
   }
@@ -14,10 +28,22 @@ export default function Index() {
     setLoading(null);
   }
 
-  const [user, setUser] = useState({});
-
   useEffect(() => {
     const formSend = async () => {
+
+      // Subscribe to creation of Todo
+const subscription = API.graphql(
+  graphqlOperation(onUpdateUserActivity)
+).subscribe({
+  next: (data) => {
+    let userActivityDetails = data.value.data.onUpdateUserActivity;
+    setUserActivityDetails(userActivityDetails);
+    console.log("called", data.value.data.onUpdateUserActivity.cursorPosition);
+    // Do something with the data
+  }
+});
+
+
       if (!email) return;
       setStillLoading();
       let res = await fetch(`https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/visit?email=${email}&existingUser=true`);
@@ -60,7 +86,7 @@ export default function Index() {
       {!loading && user && <Card
          style={{ width: '90%', margin: '50px' }}
       >
-        <Card.Header>User details</Card.Header>
+        <Card.Header>User details ${userActivityDetails?.cursorPosition}</Card.Header>
         <Card.Body>
           <blockquote className="blockquote mb-0">
             <p>
@@ -69,8 +95,8 @@ export default function Index() {
             </p>
             <footer className="blockquote-footer">
               <br></br>
-              Email <cite title="Source Title">{user.email}</cite>
-            <br></br>  Phone <cite title="Source Title">{user.phone}</cite>
+              Email: <cite title="Source Title">{user.email}</cite>
+            <br></br>  Phone: <cite title="Source Title">{user.phone}</cite>
             </footer>
           </blockquote>
         </Card.Body>

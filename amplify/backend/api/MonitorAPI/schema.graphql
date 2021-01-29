@@ -1,0 +1,5 @@
+type UserActivity @model {
+  id: ID!
+  phone: String!
+  cursorPosition: String
+}

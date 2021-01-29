@@ -5,8 +5,13 @@ var express = require('express');
 
 AWS.config.update({ region: process.env.TABLE_REGION });
 
-const dynamodb = new AWS.DynamoDB.DocumentClient();
+const dynamodbClient = new AWS.DynamoDB.DocumentClient();
+const dynamodbService = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
+
 const ses = new AWS.SES();
+
+let tableClients = 'clients';
+const pathCSVUpload = '/csvupload';
 
 let tableName = 'UserVisits';
 if (process.env.ENV && process.env.ENV !== 'NONE') {
@@ -44,50 +49,191 @@ app.get(path, function (req, res) {
     Item: item,
   };
 
+  var sendEmail = function (email, ccEmail = null, message) {
+
+    // Notifying the manager
+    // IMPORTANT! - The sender must be first manually verified in AWS SES Console.
+    var params = {
+      Destination: {
+        BccAddresses: [],
+        CcAddresses: [ccEmail], // A secondary email address to receive the notification
+        ToAddresses: [email], // A primary email address to receive the notification
+      },
+      Message: {
+        Body: {
+          Html: {
+            Charset: 'UTF-8',
+            // This is the HTML content for the email
+            Data: message,
+          },
+          Text: {
+            Charset: 'UTF-8',
+            // This is the text content for the email
+            Data: message,
+          },
+        },
+        Subject: {
+          Charset: 'UTF-8',
+          // This is the subject
+          Data: 'New visit from at website',
+        },
+      },
+      // This is the email you have authorized in AWS SES
+      Source: 'michael@glidaa.com',
+    };
+
+    return ses.sendEmail(params).promise();
+
+  }
+
+  var sendText = function (phoneNumber, message) {
+    // Following code is to send TEXT MESSAGE
+    var params = {
+      Message: message, /* required */
+      PhoneNumber: phoneNumber,
+    };
+
+    // Create promise and SNS service object
+    return new AWS.SNS({ apiVersion: '2010-03-31' }).publish(params).promise();
+
+  }
+
+  var sendMessages = function (user, callback) {
+
+    let phone = null;
+    if (user) {
+      phone = user.phone;
+    }
+
+    if (!phone) {
+      phone = "Not registered";
+    }
+
+    let email = putItemParams.Item.email;
+
+    let messagePhone = `The user ${email} just clicked the email link and is visiting the website (${now}) User phone: ${phone}  click here to see page https://explainerpage.com/admin/control/${email}`;
+
+    let messageEmail = `The user <b>${email}</b> just clicked the email link and is visiting the website (${now})<br> User phone: ${phone} <br> click here to see page https://explainerpage.com/admin/control/${email}`;
+
+ 
+
+    console.log("Email & Text message ", messageEmail, messagePhone);
+    let p1 = sendEmail('sophie@glidaa.com', 'michael@glidaa.com', messageEmail);
+    let p2 = sendEmail('gog1withme@gmail.com', null, messageEmail);
+    let p3 = sendText('+61414623616', messagePhone);
+    let p4 = sendText('+61404068926', messagePhone);
+    let p5 = sendText('+919911731169', messagePhone);
+
+    Promise.all([
+      p1, p2, p3, p4, p5
+    ])
+      .then(() => {
+        console.log("Promises fullfilled");
+        callback(user);
+      })
+      .catch(() => {
+        console.log('Something went wrong')
+        callback(user);
+      })
+
+  }
+
   // Storing the user data
-  dynamodb.put(putItemParams, (err, _data) => {
+  dynamodbClient.put(putItemParams, (err, _data) => {
     if (err) {
       res.statusCode = 500;
       res.json({ error: err, url: req.url, body: req.body });
     } else {
       // console.log('New user visit recorded.')
+
+      //*************** */
+      let params = {
+        TableName: tableClients,
+        Key: {
+          "email": req.query.email
+        }
+      };
+
+      console.log("DDB param: ", params);
+      dynamodbClient.get(params, (err, data) => {
+        if (err) {
+          console.error("Unable to read item. Error JSON:", JSON.stringify(err));
+        } else {
+          console.log("ddb data: ", data);
+
+          var user = data.Item;
+          if (!req.query.existingUser) {
+            sendMessages(user, (userData) => {
+              res.json({ 
+                "statusCode": 200,
+                "body": JSON.stringify(user),
+                "isBase64Encoded": false
+                });
+            });
+          } else {
+            console.log("Old user: ", user);
+            res.json({ 
+              "statusCode": 200,
+              "body": JSON.stringify(user),
+              "isBase64Encoded": false
+              });
+          }
+        }
+      });
+      //*************** */
     }
   });
 
-  // Notifying the manager
-  // IMPORTANT! - The sender must be first manually verified in AWS SES Console.
-  var params = {
-    Destination: {
-      BccAddresses: [],
-      CcAddresses: ['manage2@glidaa.com'], // A secondary email address to receive the notification
-      ToAddresses: ['manager@glidaa.com'], // A primary email address to receive the notification
-    },
-    Message: {
-      Body: {
-        Html: {
-          Charset: 'UTF-8',
-          // This is the HTML content for the email
-          Data: `The user <b>${putItemParams.Item.email}</b> just clicked the email link and is visiting the website (${now})`,
-        },
-        Text: {
-          Charset: 'UTF-8',
-          // This is the text content for the email
-          Data: `The user ${putItemParams.Item.email} just clicked the email link and is visiting the website (${now})`,
-        },
-      },
-      Subject: {
-        Charset: 'UTF-8',
-        // This is the subject
-        Data: 'New visit from at website',
-      },
-    },
-    // This is the email you have authorized in AWS SES
-    Source: 'authorized@email.com',
-  };
 
-  ses.sendEmail(params, function (err, data) {
-    if (err) console.log(err, err.stack);
-    else console.log(data);
+
+
+});
+
+app.post(pathCSVUpload, function (req, res) {
+  console.log(pathCSVUpload + "request start with data", req);
+  console.log(pathCSVUpload + "request body: ", req.body);
+
+  var data = req.body;
+
+  let params = {
+    RequestItems: {
+      [tableClients]: [
+
+      ]
+    }
+  }
+
+  for (let i = 0; i < data.length; i++) {
+    let phone = data[i].data[0];
+    let email = data[i].data[1];
+
+    params.RequestItems[tableClients].push({
+      PutRequest: {
+        Item: {
+          "phone": {
+            S: phone
+          },
+          "email": {
+            S: email
+          }
+        }
+      }
+    })
+
+  }
+
+  console.log("post params: ", params);
+
+  dynamodbService.batchWriteItem(params, function (err, data) {
+    if (err) {
+      console.log(err, err.stack); // an error occurred
+    }
+    else {
+      console.log(data);
+      res.json({
+        statusCode: 200,
+      });          // successful response
+    }
   });
 });
 
