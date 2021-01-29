@@ -109,11 +109,8 @@ export default function Index() {
   
     const updateMousePosition = async (ev) => {
       if (!email) return;
-    
 
- console.log(`${ev.clientX},${ev.clientY}` );
-
-      let payload = { id: email, cursorPosition: `${ev.clientX}, ${ev.clientY}` };
+      let payload = { id: email, cursorPosition: `${window.scrollY}` };
       try {
         let { data } = await API.graphql(graphqlOperation(updateUserActivity, { input: payload }));
       } catch {
@@ -124,7 +121,7 @@ export default function Index() {
     };
   
     useEffect(() => {
-      window.addEventListener("mousemove", updateMousePosition);
+      window.addEventListener("scroll", updateMousePosition);
   
       return () => window.removeEventListener("mousemove", updateMousePosition);
     }, []);

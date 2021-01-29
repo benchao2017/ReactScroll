@@ -36,7 +36,6 @@ export default function Index() {
 
       try {
         let { data } = await API.graphql(graphqlOperation(getUserActivity, { id: email } ));
-        console.log(data);
         setUserActivityDetails(data.getUserActivity);
       } catch (ex) {
         console.log(ex);
@@ -49,7 +48,6 @@ export default function Index() {
         next: (data) => {
           let userActivityDetails = data.value.data.onUpdateUserActivity;
           setUserActivityDetails(userActivityDetails);
-          console.log("called", data.value.data.onUpdateUserActivity.cursorPosition);
           // Do something with the data
         }
       });
@@ -115,9 +113,9 @@ export default function Index() {
           >
             <Card.Header>Activity details</Card.Header>
             <Card.Body>
-              <Card.Title> Cursor position </Card.Title>
+              <Card.Title> Window scroll position </Card.Title>
               <Card.Text>
-                X, Y: {userActivityDetails?.cursorPosition}
+              scrollY : {userActivityDetails?.cursorPosition}
               </Card.Text>
             </Card.Body>
           </Card>
