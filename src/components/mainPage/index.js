@@ -106,17 +106,14 @@ const Map = (props) => {
 
 export default function Index() {
   const { email } = useParams();
-
-    const [mousePosition, setMousePosition] = useState({ x: null, y: null });
   
     const updateMousePosition = async (ev) => {
       if (!email) return;
-      
-      setMousePosition({ x: ev.clientX, y: ev.clientY });
+    
 
-      var d = new Date();
-      var n = d.getTime();
-      let payload = { id: email, cursorPosition: `${ev.clientX},${ev.clientY}` };
+ console.log(`${ev.clientX},${ev.clientY}` );
+
+      let payload = { id: email, cursorPosition: `${ev.clientX}, ${ev.clientY}` };
       try {
         let { data } = await API.graphql(graphqlOperation(updateUserActivity, { input: payload }));
       } catch {
