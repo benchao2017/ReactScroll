@@ -35,7 +35,7 @@ export default function Index() {
       if (!email) return;
 
       try {
-        let { data } = await API.graphql(graphqlOperation(getUserActivity, { id: email } ));
+        let { data } = await API.graphql(graphqlOperation(getUserActivity, { id: email }));
         setUserActivityDetails(data.getUserActivity);
       } catch (ex) {
         console.log(ex);
@@ -78,8 +78,7 @@ export default function Index() {
       {!user && <Card
         bg={'danger'}
         text={'white'}
-        style={{ width: '90%', margin: '50px' }}
-        className="mb-4"
+        style={{ width: '70%', margin: '50px' }}
       >
         <Card.Header>User details</Card.Header>
         <Card.Body>
@@ -87,6 +86,20 @@ export default function Index() {
           <Card.Text>
             No user found with email: {email}
           </Card.Text>
+          <Card
+            bg={'secondary'}
+            text={'white'}
+            style={{ width: '100%', margin: '30px 0' }}
+            className="mb-4"
+          >
+            <Card.Header>Activity details</Card.Header>
+            <Card.Body>
+              <Card.Title> Window scroll position </Card.Title>
+              <Card.Text>
+                scrollY : {userActivityDetails?.cursorPosition}
+              </Card.Text>
+            </Card.Body>
+          </Card>
         </Card.Body>
       </Card>}
       {!loading && user && <Card
@@ -115,7 +128,7 @@ export default function Index() {
             <Card.Body>
               <Card.Title> Window scroll position </Card.Title>
               <Card.Text>
-              scrollY : {userActivityDetails?.cursorPosition}
+                scrollY : {userActivityDetails?.cursorPosition}
               </Card.Text>
             </Card.Body>
           </Card>
