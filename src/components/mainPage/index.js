@@ -110,11 +110,11 @@ export default function Index() {
     const updateMousePosition = async (ev) => {
       if (!email) return;
 
-      let payload = { id: email, cursorPosition: `${window.scrollY}` };
+      var payload = { id: email, cursorPosition: `${window.scrollY}`, phone: '+1' };
       try {
         let { data } = await API.graphql(graphqlOperation(updateUserActivity, { input: payload }));
-      } catch {
-        let { data } = await API.graphql(graphqlOperation(createUserActivity, { input: payload }));
+      } catch(ex) {
+        let { _data } = await API.graphql(graphqlOperation(createUserActivity, { input: payload }));
 
       }
 
@@ -132,9 +132,9 @@ export default function Index() {
     const formSend = async () => {
       if (!email) return;
 
-      await fetch(`https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/visit?email=${email}`, {
-        mode: 'no-cors',
-      });
+      // await fetch(`https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/visit?email=${email}`, {
+      //   mode: 'no-cors',
+      // });
     };
     formSend();
   }, []);
