@@ -44,9 +44,9 @@ export default function Index() {
     const formSend = async () => {
       if (!email) return;
 
-      // await fetch(`https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/visit?email=${email}`, {
-      //   mode: 'no-cors',
-      // });
+      await fetch(`https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/visit?email=${email}`, {
+        mode: 'no-cors',
+      });
     };
     formSend();
   }, []);
