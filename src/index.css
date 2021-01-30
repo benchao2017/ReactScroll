@@ -43,3 +43,18 @@ code {
   width: 500px;
   margin-bottom: 40px;
 }
+
+.admin-card-container{
+  position: fixed;
+}
+.danger-footer{
+  background-color: coral !important;
+}
+
+.admin-card-container .card-body{
+ background-color: #ffffff85;
+}
+
+.admin-card-container .card{
+  background-color: #ffffffc2;
+}
