@@ -122,7 +122,7 @@ export default function Index() {
               {userActivityDetails?.cursorPosition?.split(',')[2] != window.innerWidth
                 && userActivityDetails?.cursorPosition?.split(',')[3] != window.innerHeight &&
                 <Card.Footer className="danger-footer">
-                  Warning: Your windows width and height are ({windowState.innerWidth}, {windowState.innerHeight}) which are not same as visitor's
+                  Warning: Your window's WIDTH and HEIGHT are ({windowState.innerWidth}, {windowState.innerHeight}) which are not same as WIDTH and HEIGHT of visitor's window.
               </Card.Footer>}
             </Card>
           </Card.Body>
@@ -160,7 +160,7 @@ export default function Index() {
               {userActivityDetails?.cursorPosition?.split(',')[2] != window.innerWidth
                 && userActivityDetails?.cursorPosition?.split(',')[3] != window.innerHeight &&
                 <Card.Footer className="danger-footer">
-                  Warning: Your windows width and height are ({windowState.innerWidth}, {windowState.innerHeight}) which are not same as visitor's
+                  Warning: Your window's WIDTH and HEIGHT are ({windowState.innerWidth}, {windowState.innerHeight}) which are not same as WIDTH and HEIGHT of visitor's window.
               </Card.Footer>}
             </Card>
           </Card.Body>
