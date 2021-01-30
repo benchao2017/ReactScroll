@@ -41,8 +41,9 @@ export default function Index() {
       let xy = userActivityDetails?.cursorPosition?.split(',');
       let x = xy[0];
       let y = xy[1];
-      window.scrollTo(x, y);
-      console.log(x, y);
+
+      let options = {top: y, left: x, behavior: 'smooth'}; // left and top are coordinates
+      window.scrollTo(options);
     }
 
     const formSend = async () => {
