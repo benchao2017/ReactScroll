@@ -20,12 +20,12 @@ Amplify.configure({
 export default function Index() {
   const { email } = useParams();
 
-  const setTimeOutVal = 500;
+  const setTimeOutVal = 10000;
 
   const [isAdminControlling, setScrollControl] = useState(false);
-  const [adminControlTimeOut, setAdminControlTimeOut] = useState(setTimeOutVal);
 
   const updateMousePosition = async (ev) => {
+    console.log("Admin control", isAdminControlling);
     if (!isAdminControlling) {
       if (!email) return;
 
@@ -40,17 +40,20 @@ export default function Index() {
 
   };
 
+let interval = null;
 
  var runInterval = (time) => {
-    if (interval) {
-      clearInterval(interval)
-      interval = null
-    }
+  
+  if (interval) {
+    clearTimeout(interval)
+   // interval = null
+  }
 
-   var interval = setInterval(() => {
+    interval = setTimeout(() => {
       setScrollControl(false);
         runInterval(time) // 500 is an example of a new time
      }, time)
+     
   }
 
   useEffect(() => {
@@ -66,7 +69,7 @@ export default function Index() {
     ).subscribe({
       next: (data) => {
         let userActivityDetails = data.value.data.onUpdateUserActivity;
-        console.log("Admin activity: ", userActivityDetails);
+       // console.log("Admin activity: ", userActivityDetails);
         let xy = userActivityDetails?.cursorPosition?.split(',');
         let x = xy[0];
         let y = xy[1];
@@ -75,7 +78,6 @@ export default function Index() {
           setScrollControl(true);
           let options = { top: y, left: x, behavior: 'smooth' }; // left and top are coordinates
           window.scrollTo(options);
-          setAdminControlTimeOut(setTimeOutVal);
           runInterval(setTimeOutVal);
 
         };
