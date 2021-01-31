@@ -3,8 +3,12 @@ import { useParams } from 'react-router-dom';
 import Card from 'react-bootstrap/Card'
 import Amplify, { API, graphqlOperation } from 'aws-amplify'
 import { onUpdateUserActivity } from '../../../graphql/subscriptions'
+import { updateUserActivity, createUserActivity } from '../../../graphql/mutations'
+import Button from 'react-bootstrap/Button'
+
 import { getUserActivity } from '../../../graphql/queries'
 import useWindowSize from '../../../helper/windowResizeHook'
+
 
 import awsExports from '../../../aws-exports';
 import Content from '../../mainPage/content';
@@ -26,6 +30,12 @@ export default function Index() {
   const windowState = useWindowSize();
 
   const [userActivityDetails, setUserActivityDetails] = useState(null);
+  const [isScrollControlled, setScrollControl] = useState(false);
+
+  const toggleScrollControl = () => {
+    setScrollControl(!isScrollControlled);
+    console.log(isScrollControlled);
+  }
 
   const setStillLoading = () => {
     setLoading("Loading user detail ......");
@@ -34,6 +44,29 @@ export default function Index() {
     setLoading(null);
   }
 
+
+  
+  const updateMousePosition = async (ev) => {
+ 
+   if(!isScrollControlled) return;
+   
+    if (!email) return;
+
+    var payload = { id: "admin.admin", cursorPosition: `${window.scrollX},${window.scrollY},${window.innerWidth},${window.innerHeight},${email}`, phone: '+1' };
+    try {
+      let { data } = await API.graphql(graphqlOperation(updateUserActivity, { input: payload }));
+    } catch(ex) {
+      let { _data } = await API.graphql(graphqlOperation(createUserActivity, { input: payload }));
+
+    }
+
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", updateMousePosition);
+
+    return () => window.removeEventListener("scroll", updateMousePosition);
+  }, [isScrollControlled]);
 
   useEffect(() => {
 
@@ -59,12 +92,14 @@ export default function Index() {
         console.log(ex);
       }
 
-      // Subscribe to creation of Todo
+
       const subscription = API.graphql(
         graphqlOperation(onUpdateUserActivity)
       ).subscribe({
-        next: (data) => {
+        next: (data) => {          
           let userActivityDetails = data.value.data.onUpdateUserActivity;
+          if(userActivityDetails?.id!=email) return;
+
           setUserActivityDetails(userActivityDetails);
           setScrollPosition(userActivityDetails);
           // Do something with the data
@@ -114,8 +149,11 @@ export default function Index() {
             >
               <Card.Header>Activity details</Card.Header>
               <Card.Body>
-                <Card.Title> Window scroll position </Card.Title>
+                <Card.Title> Window scroll position 
+              </Card.Title>
                 <Card.Text>
+                <Button variant={!isScrollControlled?'danger' : 'warning'} onClick={toggleScrollControl}>{!isScrollControlled?'Take' : 'Release'} control</Button>   
+<br></br>
                   scroll(X, Y) : {userActivityDetails?.cursorPosition?.split(',')[0]}, {userActivityDetails?.cursorPosition?.split(',')[1]} <br></br>
                   window(W, H) : {userActivityDetails?.cursorPosition?.split(',')[2]}, {userActivityDetails?.cursorPosition?.split(',')[3]}
                 </Card.Text>
@@ -154,6 +192,8 @@ export default function Index() {
               <Card.Body>
                 <Card.Title> Window scroll position </Card.Title>
                 <Card.Text>
+                <Button variant={!isScrollControlled?'danger' : 'warning'} onClick={toggleScrollControl}>{!isScrollControlled?'Take' : 'Release'} control</Button>   
+<br></br>
                   scroll(X, Y) : {userActivityDetails?.cursorPosition?.split(',')[0]}, {userActivityDetails?.cursorPosition?.split(',')[1]} <br></br>
                   window(W, H) : {userActivityDetails?.cursorPosition?.split(',')[2]}, {userActivityDetails?.cursorPosition?.split(',')[3]}
                 </Card.Text>

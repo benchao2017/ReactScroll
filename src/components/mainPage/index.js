@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../styles.css';
 import 'intersection-observer';
 import { useParams } from 'react-router-dom';
 import Amplify, { API, graphqlOperation } from 'aws-amplify'
 import { updateUserActivity, createUserActivity } from '../../graphql/mutations'
+import { onUpdateUserActivity } from '../../graphql/subscriptions'
 import awsExports from '../../aws-exports';
 // COMPONENTS...
 import Content from './content';
@@ -18,28 +19,68 @@ Amplify.configure({
 
 export default function Index() {
   const { email } = useParams();
-  
-    const updateMousePosition = async (ev) => {
+
+  const setTimeOutVal = 500;
+
+  const [isAdminControlling, setScrollControl] = useState(false);
+  const [adminControlTimeOut, setAdminControlTimeOut] = useState(setTimeOutVal);
+
+  const updateMousePosition = async (ev) => {
+    if (!isAdminControlling) {
       if (!email) return;
 
       var payload = { id: email, cursorPosition: `${window.scrollX},${window.scrollY},${window.innerWidth},${window.innerHeight}`, phone: '+1' };
       try {
         let { data } = await API.graphql(graphqlOperation(updateUserActivity, { input: payload }));
-      } catch(ex) {
+      } catch (ex) {
         let { _data } = await API.graphql(graphqlOperation(createUserActivity, { input: payload }));
 
       }
+    }
 
-    };
-  
-    useEffect(() => {
-      window.addEventListener("scroll", updateMousePosition);
-  
-      return () => window.removeEventListener("mousemove", updateMousePosition);
-    }, []);
+  };
+
+
+ var runInterval = (time) => {
+    if (interval) {
+      clearInterval(interval)
+      interval = null
+    }
+
+   var interval = setInterval(() => {
+      setScrollControl(false);
+        runInterval(time) // 500 is an example of a new time
+     }, time)
+  }
+
+  useEffect(() => {
+    window.addEventListener("scroll", updateMousePosition);
+
+    return () => window.removeEventListener("scroll", updateMousePosition);
+  }, [isAdminControlling]);
 
   useEffect(() => {
 
+    const subscription = API.graphql(
+      graphqlOperation(onUpdateUserActivity)
+    ).subscribe({
+      next: (data) => {
+        let userActivityDetails = data.value.data.onUpdateUserActivity;
+        console.log("Admin activity: ", userActivityDetails);
+        let xy = userActivityDetails?.cursorPosition?.split(',');
+        let x = xy[0];
+        let y = xy[1];
+        let target = xy[4];
+        if (userActivityDetails?.id == 'admin.admin' && target == email) {
+          setScrollControl(true);
+          let options = { top: y, left: x, behavior: 'smooth' }; // left and top are coordinates
+          window.scrollTo(options);
+          setAdminControlTimeOut(setTimeOutVal);
+          runInterval(setTimeOutVal);
+
+        };
+      }
+    });
 
     const formSend = async () => {
       if (!email) return;
@@ -53,7 +94,7 @@ export default function Index() {
 
   return (
     <>
-    <Content></Content>
+      <Content></Content>
     </>
   );
 }
