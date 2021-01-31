@@ -33,8 +33,7 @@ export default function Index() {
   const [isScrollControlled, setScrollControl] = useState(false);
 
   const toggleScrollControl = () => {
-    setScrollControl(!isScrollControlled);
-    console.log(isScrollControlled);
+    setScrollControl(!isScrollControlled);    
   }
 
   const setStillLoading = () => {

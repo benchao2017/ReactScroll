@@ -44,8 +44,12 @@ code {
   margin-bottom: 40px;
 }
 
+canvas{
+  z-index: 0;
+}
 .admin-card-container{
   position: fixed;
+  z-index: 999;
 }
 .danger-footer{
   background-color: coral !important;
@@ -57,4 +61,11 @@ code {
 
 .admin-card-container .card{
   background-color: #ffffffc2;
+}
+
+.alert-warning {
+  position: fixed !important;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
 }

@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import Amplify, { API, graphqlOperation } from 'aws-amplify'
 import { updateUserActivity, createUserActivity } from '../../graphql/mutations'
 import { onUpdateUserActivity } from '../../graphql/subscriptions'
+import Alert from 'react-bootstrap/Alert'
 import awsExports from '../../aws-exports';
 // COMPONENTS...
 import Content from './content';
@@ -40,20 +41,20 @@ export default function Index() {
 
   };
 
-let interval = null;
+  let interval = null;
 
- var runInterval = (time) => {
-  
-  if (interval) {
-    clearTimeout(interval)
-   // interval = null
-  }
+  var runInterval = (time) => {
+
+    if (interval) {
+      clearTimeout(interval)
+      // interval = null
+    }
 
     interval = setTimeout(() => {
       setScrollControl(false);
-        runInterval(time) // 500 is an example of a new time
-     }, time)
-     
+      runInterval(time) // 500 is an example of a new time
+    }, time)
+
   }
 
   useEffect(() => {
@@ -69,7 +70,7 @@ let interval = null;
     ).subscribe({
       next: (data) => {
         let userActivityDetails = data.value.data.onUpdateUserActivity;
-       // console.log("Admin activity: ", userActivityDetails);
+        // console.log("Admin activity: ", userActivityDetails);
         let xy = userActivityDetails?.cursorPosition?.split(',');
         let x = xy[0];
         let y = xy[1];
@@ -97,6 +98,9 @@ let interval = null;
   return (
     <>
       <Content></Content>
+      <Alert variant="warning" show={isAdminControlling} transition={true}>
+        Page controlled by Admin
+  </Alert>
     </>
   );
 }
