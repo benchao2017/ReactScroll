@@ -221,7 +221,7 @@ export default function CSVFileReader() {
             <tr>
               <th>#</th>
               {fileData && (fileData[0]?.data).map(key=>{
-               return <th key={key} className={!serverTableKeys?.includes(key.toLowerCase())?'red-bg': 'green-bg'}>{!serverTableKeys?.includes(key.toLowerCase()) && <span className="remove-icon">-</span>}{key}</th>
+               return <th key={key} className={!serverTableKeys?.includes(key.toLowerCase())?'red-bg': 'green-bg'}>{!serverTableKeys?.includes(key.toLowerCase()) && <span className="remove-icon"></span>}{key}</th>
               })}
              
             </tr>

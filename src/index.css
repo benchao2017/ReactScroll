@@ -72,6 +72,7 @@ canvas{
 
 .red-bg{
   background-color: #ff7f50ab;
+  padding-left: 22px;
 }
 
 .green-bg {
@@ -79,7 +80,11 @@ canvas{
 }
 
 .remove-icon{
-  padding: 3px;
-  font-size: large;
-  font-weight: bold;
+  color: red;
+  background: red;
+  position: absolute;
+  height: 6px;
+  width: 20px;
+  margin-top: 9px;
+  border: solid 1px;
 }
