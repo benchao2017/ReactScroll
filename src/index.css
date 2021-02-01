@@ -69,3 +69,17 @@ canvas{
   width: 100%;
   text-align: center;
 }
+
+.red-bg{
+  background-color: coral;
+}
+
+.green-bg {
+  background-color: seagreen;
+}
+
+.remove-icon{
+  padding: 3px;
+  font-size: large;
+  font-weight: bold;
+}

@@ -33,7 +33,6 @@ export default function CSVFileReader() {
         let userData;
         if (data.body) {
           let dataBody = JSON.parse(data.body);
-//console.log(dataBody);
 
           let keys = Object.keys(dataBody[0]);
           setServerTableKeys(keys);
@@ -52,8 +51,6 @@ export default function CSVFileReader() {
             text.trim();
             text += "\n"
           });
-
-       //   console.log("Text", text);
 
           setTextAreaVal(text.slice(0, -1));
         }
@@ -91,9 +88,7 @@ export default function CSVFileReader() {
   const handleUploadFile = async () => {
     hideToast();
     setshowProgress(true);
-    console.log('---------------------------')
-    console.log(fileData)
-    console.log('---------------------------')
+
 
     const rawResponse = await fetch('https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/csvupload', {
       method: 'POST',
@@ -110,20 +105,15 @@ export default function CSVFileReader() {
       showToast();
       setshowProgress(false);
     }
-    console.log("uploaded", content);
   }
 
   const handleOnError = (err, file, inputElem, reason) => {
-    console.log(err)
     setshowProgress(false);
 
   }
 
   const handleOnRemoveFile = (data) => {
     hideToast();
-    console.log('---------------------------')
-    console.log(data)
-    console.log('---------------------------')
 
     setFileData(null);
   }
@@ -151,7 +141,6 @@ export default function CSVFileReader() {
       data.push({ data: _data });
     }
 
-    console.log(data);
     setFileData(data);
   }
 
@@ -232,7 +221,7 @@ export default function CSVFileReader() {
             <tr>
               <th>#</th>
               {fileData && (fileData[0]?.data).map(key=>{
-               return <th key={key}>{!serverTableKeys?.includes(key.toLowerCase()) && '-'}{key}</th>
+               return <th key={key} className={!serverTableKeys?.includes(key.toLowerCase())?'red-bg': 'green-bg'}>{!serverTableKeys?.includes(key.toLowerCase()) && <span className="remove-icon">-</span>}{key}</th>
               })}
              
             </tr>
