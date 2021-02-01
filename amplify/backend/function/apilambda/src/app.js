@@ -223,20 +223,22 @@ app.post(pathCSVUpload, function (req, res) {
     }
   }
 
-  for (let i = 0; i < data.length; i++) {
-    let phone = data[i].data[0];
-    let email = data[i].data[1];
+  for (let i = 1; i < data.length; i++) {
+   
+    let _item = {};
+    for(let j=0; j< data[0].length; j++){
+      
+      let column = data[0][j].toLowerCase();
 
+      _item[column] = { S: data[i][j] };
+    }
+    
     params.RequestItems[tableClients].push({
       PutRequest: {
-        Item: {
-          "phone": {
-            S: phone
-          },
-          "email": {
-            S: email
-          }
-        }
+
+        Item: _item
+
+
       }
     })
 

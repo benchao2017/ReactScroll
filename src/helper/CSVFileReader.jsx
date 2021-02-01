@@ -18,26 +18,49 @@ export default function CSVFileReader() {
 
   const [showProgress, setshowProgress] = useState(false);
 
+  const [serverTableKeys, setServerTableKeys] = useState(null);
   const [fileData, setFileData] = useState(null);
-  const [textAreVal, setTextAreaVal] = useState("phone email\n111111111 abc@gmail.com\n222222222 xyz@gmail.com");
+  const [textAreVal, setTextAreaVal] = useState("Loading ........");
 
-  
+
   useEffect(() => {
-  const formSend = async () => {
-   
+    const formSend = async () => {
 
-   let res = await fetch(`https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/visit?getAllClient=${true}`);
 
-    res.json().then((data) => {
-      let userData;
-      if (data.body) {
-       let dataBody =   JSON.parse(data.body);
-         console.log(dataBody);       
-      } 
-    })
-  };
-  formSend();
-}, []);
+      let res = await fetch(`https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/visit?getAllClient=${true}`);
+
+      res.json().then((data) => {
+        let userData;
+        if (data.body) {
+          let dataBody = JSON.parse(data.body);
+//console.log(dataBody);
+
+          let keys = Object.keys(dataBody[0]);
+          setServerTableKeys(keys);
+
+          let text = '';
+          keys.map(key => {
+            text += key+ " ";
+          });
+          text.trim();
+          text += "\n"
+
+          dataBody.map((x) => {
+            for (let i = 0; i < keys.length; i++) {
+              text += x[keys[i]] + " ";
+            }
+            text.trim();
+            text += "\n"
+          });
+
+       //   console.log("Text", text);
+
+          setTextAreaVal(text.slice(0, -1));
+        }
+      })
+    };
+    formSend();
+  }, []);
 
 
   const handleOpenDialog = (e) => {
@@ -55,7 +78,11 @@ export default function CSVFileReader() {
 
     let text = '';
     data.map((x) => {
-      text += x.data[0] + " " + x.data[1] + "\n"
+      x.data.map(y=>{
+        text += y + " ";
+      })
+      text.trim();
+      text += "\n"
     });
 
     setTextAreaVal(text.slice(0, -1));
@@ -74,11 +101,12 @@ export default function CSVFileReader() {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(fileData.slice(1))
+      body: JSON.stringify(fileData)
     });
     const content = await rawResponse.json();
 
     if (content.statusCode == 200) {
+      setServerTableKeys(Object.keys(fileData[0].data));
       showToast();
       setshowProgress(false);
     }
@@ -112,13 +140,18 @@ export default function CSVFileReader() {
   }
 
   const handlePreview = () => {
-    console.log(textAreVal);
+    if(textAreVal.length<1) {
+      setFileData(null);
+      return;}
+
     let data = [];
     var lines = textAreVal.split('\n');
     for (var i = 0; i < lines.length; i++) {
-      let _data = lines[i].split(' ');
+      let _data = lines[i].trim().split(' ');
       data.push({ data: _data });
     }
+
+    console.log(data);
     setFileData(data);
   }
 
@@ -198,16 +231,19 @@ export default function CSVFileReader() {
           <thead>
             <tr>
               <th>#</th>
-              <th>{fileData && fileData[0]?.data[0]}</th>
-              <th>{fileData && fileData[0]?.data[1]}</th>
+              {fileData && (fileData[0]?.data).map(key=>{
+               return <th key={key}>{!serverTableKeys?.includes(key.toLowerCase()) && '-'}{key}</th>
+              })}
+             
             </tr>
           </thead>
           <tbody>
             {fileData?.slice(1).map((x, i) => {
               return <tr key={i}>
                 <td>{i + 1}</td>
-                <td>{x.data[0]}</td>
-                <td>{x.data[1]}</td>
+                {x.data.map((value, i)=>{
+                  return  <td key={i}>{value}</td>
+                })}               
               </tr>
             })}
           </tbody>
