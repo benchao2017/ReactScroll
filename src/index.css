@@ -82,7 +82,7 @@ canvas{
 .remove-icon{
   color: red;
   background: red;
-  position: absolute;
+  float: right;
   height: 6px;
   width: 20px;
   margin-top: 9px;

@@ -228,9 +228,13 @@ app.post(pathCSVUpload, function (req, res) {
     var _item = {};
     for (let j = 0; j < data[0].data.length; j++) {
 
-      let column = data[0].data[j].toLowerCase();     
+      let column = data[0].data[j].toLowerCase(); 
+      let val = data[i].data[j];
+      if(val == undefined){
+        val = "";
+      }    
 
-      _item[column] = { S: data[i].data[j] };
+      _item[column] = { S: val };
     
 
     }

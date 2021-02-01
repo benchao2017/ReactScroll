@@ -101,7 +101,8 @@ export default function CSVFileReader() {
     const content = await rawResponse.json();
 
     if (content.statusCode == 200) {
-      setServerTableKeys(Object.keys(fileData[0].data));
+      console.log(fileData);
+      setServerTableKeys(fileData[0].data);
       showToast();
       setshowProgress(false);
     }
