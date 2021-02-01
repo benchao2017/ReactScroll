@@ -46,7 +46,7 @@ export default function CSVFileReader() {
 
           dataBody.map((x) => {
             for (let i = 0; i < keys.length; i++) {
-              text += x[keys[i]] + " ";
+              text += (x[keys[i]]==undefined)? "" : x[keys[i]] + " ";
             }
             text.trim();
             text += "\n"
@@ -101,8 +101,11 @@ export default function CSVFileReader() {
     const content = await rawResponse.json();
 
     if (content.statusCode == 200) {
-      console.log(fileData);
-      setServerTableKeys(fileData[0].data);
+      try{
+      let keys = Object.values(Object.values(fileData[0].data)).map(val=>val.toLowerCase());
+     
+      setServerTableKeys(keys);
+      }catch{}
       showToast();
       setshowProgress(false);
     }
