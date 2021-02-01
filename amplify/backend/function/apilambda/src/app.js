@@ -226,14 +226,14 @@ app.post(pathCSVUpload, function (req, res) {
   for (let i = 1; i < data.length; i++) {
 
     var _item = {};
-    for (let j = 0; j < data[0].length; j++) {
+    for (let j = 0; j < data[0].data.length; j++) {
 
-      let column = data[0][j].toLowerCase();
+      let column = data[0].data[j].toLowerCase();
 
       console.log("column", column);
 
-      _item[column] = { S: data[i][j] };
-      
+      _item[column] = { S: data[i].data[j] };
+
       console.log("item", _item[column]);
 
     }
