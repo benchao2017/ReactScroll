@@ -143,7 +143,7 @@ app.get(path, function (req, res) {
     let params = {
       TableName: tableClients      
     };
-    docClient.scan(params, (err, data)=>{
+    dynamodbClient.scan(params, (err, data)=>{
       if (err) {
         console.error("Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
         res.statusCode = 500;
