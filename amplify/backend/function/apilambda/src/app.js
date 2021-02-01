@@ -227,11 +227,13 @@ app.post(pathCSVUpload, function (req, res) {
    
     let _item = {};
     for(let j=0; j< data[0].length; j++){
-      
+
       let column = data[0][j].toLowerCase();
 
       _item[column] = { S: data[i][j] };
     }
+
+    console.log("Item: ", JSON.stringify(_item));
     
     params.RequestItems[tableClients].push({
       PutRequest: {
@@ -245,6 +247,7 @@ app.post(pathCSVUpload, function (req, res) {
   }
 
   console.log("post params: ", params);
+  console.log("Post parm string: ", JSON.stringify(params));
 
   dynamodbService.batchWriteItem(params, function (err, data) {
     if (err) {
