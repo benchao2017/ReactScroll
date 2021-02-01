@@ -32,7 +32,7 @@ app.use(function (_req, res, next) {
 });
 
 app.get(path, function (req, res) {
-  if (!req.query.email) {
+  if (!req.query.email && !req.query.getAllClient) {
     res.json({
       statusCode: 400,
     });

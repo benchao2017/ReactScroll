@@ -21,6 +21,25 @@ export default function CSVFileReader() {
   const [fileData, setFileData] = useState(null);
   const [textAreVal, setTextAreaVal] = useState("phone email\n111111111 abc@gmail.com\n222222222 xyz@gmail.com");
 
+  
+  useEffect(() => {
+  const formSend = async () => {
+   
+
+   let res = await fetch(`https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/visit?getAllClient=${true}`);
+
+    res.json().then((data) => {
+      let userData;
+      if (data.body) {
+       let dataBody =   JSON.parse(data.body);
+         console.log(dataBody);       
+      } 
+    })
+  };
+  formSend();
+}, []);
+
+
   const handleOpenDialog = (e) => {
     hideToast();
     // Note that the ref is set async, so it might be null at some point
