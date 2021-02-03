@@ -6,6 +6,17 @@ type UserActivity {
   updatedAt: AWSDateTime!
 }
 
+type EmailTemplate {
+  id: ID!
+  name: String!
+  subject: String
+  htmlBody: String
+  textBody: String
+  files: AWSJSON
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
 enum ModelSortDirection {
   ASC
   DESC
@@ -114,6 +125,8 @@ enum ModelAttributeTypes {
 type Query {
   getUserActivity(id: ID!): UserActivity
   listUserActivitys(filter: ModelUserActivityFilterInput, limit: Int, nextToken: String): ModelUserActivityConnection
+  getEmailTemplate(id: ID!): EmailTemplate
+  listEmailTemplates(filter: ModelEmailTemplateFilterInput, limit: Int, nextToken: String): ModelEmailTemplateConnection
 }
 
 input CreateUserActivityInput {
@@ -136,6 +149,9 @@ type Mutation {
   createUserActivity(input: CreateUserActivityInput!, condition: ModelUserActivityConditionInput): UserActivity
   updateUserActivity(input: UpdateUserActivityInput!, condition: ModelUserActivityConditionInput): UserActivity
   deleteUserActivity(input: DeleteUserActivityInput!, condition: ModelUserActivityConditionInput): UserActivity
+  createEmailTemplate(input: CreateEmailTemplateInput!, condition: ModelEmailTemplateConditionInput): EmailTemplate
+  updateEmailTemplate(input: UpdateEmailTemplateInput!, condition: ModelEmailTemplateConditionInput): EmailTemplate
+  deleteEmailTemplate(input: DeleteEmailTemplateInput!, condition: ModelEmailTemplateConditionInput): EmailTemplate
 }
 
 input ModelUserActivityConditionInput {
@@ -150,4 +166,57 @@ type Subscription {
   onCreateUserActivity: UserActivity @aws_subscribe(mutations: ["createUserActivity"])
   onUpdateUserActivity: UserActivity @aws_subscribe(mutations: ["updateUserActivity"])
   onDeleteUserActivity: UserActivity @aws_subscribe(mutations: ["deleteUserActivity"])
+  onCreateEmailTemplate: EmailTemplate @aws_subscribe(mutations: ["createEmailTemplate"])
+  onUpdateEmailTemplate: EmailTemplate @aws_subscribe(mutations: ["updateEmailTemplate"])
+  onDeleteEmailTemplate: EmailTemplate @aws_subscribe(mutations: ["deleteEmailTemplate"])
+}
+
+type ModelEmailTemplateConnection {
+  items: [EmailTemplate]
+  nextToken: String
+}
+
+input ModelEmailTemplateFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  subject: ModelStringInput
+  htmlBody: ModelStringInput
+  textBody: ModelStringInput
+  files: ModelStringInput
+  and: [ModelEmailTemplateFilterInput]
+  or: [ModelEmailTemplateFilterInput]
+  not: ModelEmailTemplateFilterInput
+}
+
+input CreateEmailTemplateInput {
+  id: ID
+  name: String!
+  subject: String
+  htmlBody: String
+  textBody: String
+  files: AWSJSON
+}
+
+input UpdateEmailTemplateInput {
+  id: ID!
+  name: String
+  subject: String
+  htmlBody: String
+  textBody: String
+  files: AWSJSON
+}
+
+input DeleteEmailTemplateInput {
+  id: ID
+}
+
+input ModelEmailTemplateConditionInput {
+  name: ModelStringInput
+  subject: ModelStringInput
+  htmlBody: ModelStringInput
+  textBody: ModelStringInput
+  files: ModelStringInput
+  and: [ModelEmailTemplateConditionInput]
+  or: [ModelEmailTemplateConditionInput]
+  not: ModelEmailTemplateConditionInput
 }

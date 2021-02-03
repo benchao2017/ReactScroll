@@ -30,3 +30,38 @@ export const listUserActivitys = /* GraphQL */ `
     }
   }
 `;
+export const getEmailTemplate = /* GraphQL */ `
+  query GetEmailTemplate($id: ID!) {
+    getEmailTemplate(id: $id) {
+      id
+      name
+      subject
+      htmlBody
+      textBody
+      files
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listEmailTemplates = /* GraphQL */ `
+  query ListEmailTemplates(
+    $filter: ModelEmailTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEmailTemplates(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        subject
+        htmlBody
+        textBody
+        files
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

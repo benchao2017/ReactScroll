@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Card from 'react-bootstrap/Card'
-import Amplify, { API, graphqlOperation } from 'aws-amplify'
-import { onUpdateUserActivity } from '../../../graphql/subscriptions'
-import { updateUserActivity, createUserActivity } from '../../../graphql/mutations'
+
 import Button from 'react-bootstrap/Button'
 
 import { getUserActivity } from '../../../graphql/queries'
 import useWindowSize from '../../../helper/windowResizeHook'
-
-
-import awsExports from '../../../aws-exports';
 import Content from '../../mainPage/content';
+
+import Amplify, { API, graphqlOperation } from 'aws-amplify'
+import { onUpdateUserActivity } from '../../../graphql/subscriptions'
+import { updateUserActivity, createUserActivity } from '../../../graphql/mutations'
+import awsExports from '../../../aws-exports';
 Amplify.configure({
   ...awsExports,
   Analytics: {

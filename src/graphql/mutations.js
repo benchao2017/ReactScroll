@@ -43,3 +43,54 @@ export const deleteUserActivity = /* GraphQL */ `
     }
   }
 `;
+export const createEmailTemplate = /* GraphQL */ `
+  mutation CreateEmailTemplate(
+    $input: CreateEmailTemplateInput!
+    $condition: ModelEmailTemplateConditionInput
+  ) {
+    createEmailTemplate(input: $input, condition: $condition) {
+      id
+      name
+      subject
+      htmlBody
+      textBody
+      files
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateEmailTemplate = /* GraphQL */ `
+  mutation UpdateEmailTemplate(
+    $input: UpdateEmailTemplateInput!
+    $condition: ModelEmailTemplateConditionInput
+  ) {
+    updateEmailTemplate(input: $input, condition: $condition) {
+      id
+      name
+      subject
+      htmlBody
+      textBody
+      files
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteEmailTemplate = /* GraphQL */ `
+  mutation DeleteEmailTemplate(
+    $input: DeleteEmailTemplateInput!
+    $condition: ModelEmailTemplateConditionInput
+  ) {
+    deleteEmailTemplate(input: $input, condition: $condition) {
+      id
+      name
+      subject
+      htmlBody
+      textBody
+      files
+      createdAt
+      updatedAt
+    }
+  }
+`;

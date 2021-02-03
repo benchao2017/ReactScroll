@@ -32,7 +32,7 @@ app.use(function (_req, res, next) {
 });
 
 app.get(path, function (req, res) {
-  if (!req.query.email) {
+  if (!req.query.email && !req.query.getAllClient) {
     res.json({
       statusCode: 400,
     });
@@ -42,7 +42,7 @@ app.get(path, function (req, res) {
 
   let item = {
     time: now,
-    email: req.query.email,
+    email: !req.query.existingUser ? req.query.email : 'admin.admin',
   };
   let putItemParams = {
     TableName: tableName,
@@ -115,7 +115,7 @@ app.get(path, function (req, res) {
 
     let messageEmail = `The user <b>${email}</b> just clicked the email link and is visiting the website (${now})<br> User phone: ${phone} <br> click here to see page https://explainerpage.com/admin/control/${email}`;
 
- 
+
 
     console.log("Email & Text message ", messageEmail, messagePhone);
     let p1 = sendEmail('sophie@glidaa.com', 'michael@glidaa.com', messageEmail);
@@ -138,51 +138,71 @@ app.get(path, function (req, res) {
 
   }
 
-  // Storing the user data
-  dynamodbClient.put(putItemParams, (err, _data) => {
-    if (err) {
-      res.statusCode = 500;
-      res.json({ error: err, url: req.url, body: req.body });
-    } else {
-      // console.log('New user visit recorded.')
+  if (req.query.getAllClient) {
+    //Get all client data
+    let params = {
+      TableName: tableClients
+    };
+    dynamodbClient.scan(params, (err, data) => {
+      if (err) {
+        console.error("Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
+        res.statusCode = 500;
+        res.json({ error: err, url: req.url, body: req.body });
+      } else {
+        res.json({
+          "statusCode": 200,
+          "body": JSON.stringify(data.Items),
+          "isBase64Encoded": false
+        });
+      }
+    });
+  } else {
+    // Storing the user data
+    dynamodbClient.put(putItemParams, (err, _data) => {
+      if (err) {
+        res.statusCode = 500;
+        res.json({ error: err, url: req.url, body: req.body });
+      } else {
+        // console.log('New user visit recorded.')
 
-      //*************** */
-      let params = {
-        TableName: tableClients,
-        Key: {
-          "email": req.query.email
-        }
-      };
+        //*************** */
+        let params = {
+          TableName: tableClients,
+          Key: {
+            "email": req.query.email
+          }
+        };
 
-      console.log("DDB param: ", params);
-      dynamodbClient.get(params, (err, data) => {
-        if (err) {
-          console.error("Unable to read item. Error JSON:", JSON.stringify(err));
-        } else {
-          console.log("ddb data: ", data);
+        console.log("DDB param: ", params);
+        dynamodbClient.get(params, (err, data) => {
+          if (err) {
+            console.error("Unable to read item. Error JSON:", JSON.stringify(err));
+          } else {
+            console.log("ddb data: ", data);
 
-          var user = data.Item;
-          if (!req.query.existingUser) {
-            sendMessages(user, (userData) => {
-              res.json({ 
+            var user = data.Item;
+            if (!req.query.existingUser) {
+              sendMessages(user, (userData) => {
+                res.json({
+                  "statusCode": 200,
+                  "body": JSON.stringify(user),
+                  "isBase64Encoded": false
+                });
+              });
+            } else {
+              console.log("Old user: ", user);
+              res.json({
                 "statusCode": 200,
                 "body": JSON.stringify(user),
                 "isBase64Encoded": false
-                });
-            });
-          } else {
-            console.log("Old user: ", user);
-            res.json({ 
-              "statusCode": 200,
-              "body": JSON.stringify(user),
-              "isBase64Encoded": false
               });
+            }
           }
-        }
-      });
-      //*************** */
-    }
-  });
+        });
+        //*************** */
+      }
+    });
+  }
 
 
 
@@ -203,26 +223,35 @@ app.post(pathCSVUpload, function (req, res) {
     }
   }
 
-  for (let i = 0; i < data.length; i++) {
-    let phone = data[i].data[0];
-    let email = data[i].data[1];
+  for (let i = 1; i < data.length; i++) {
+
+    var _item = {};
+    for (let j = 0; j < data[0].data.length; j++) {
+
+      let column = data[0].data[j].toLowerCase(); 
+      let val = data[i].data[j];
+      if(val == undefined){
+        val = "";
+      }    
+
+      _item[column] = { S: val };
+    
+
+    }
+  
 
     params.RequestItems[tableClients].push({
       PutRequest: {
-        Item: {
-          "phone": {
-            S: phone
-          },
-          "email": {
-            S: email
-          }
-        }
+
+        Item: _item
+
+
       }
     })
 
   }
 
-  console.log("post params: ", params);
+  console.log("Post parm string: ", JSON.stringify(params));
 
   dynamodbService.batchWriteItem(params, function (err, data) {
     if (err) {

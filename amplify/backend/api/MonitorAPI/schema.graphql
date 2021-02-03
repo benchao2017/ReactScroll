@@ -3,3 +3,12 @@ type UserActivity @model {
   phone: String!
   cursorPosition: String
 }
+
+type EmailTemplate @model {
+  id: ID!
+  name: String!
+  subject: String
+  htmlBody: String
+  textBody: String
+  files: AWSJSON
+}

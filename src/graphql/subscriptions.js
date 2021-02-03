@@ -34,3 +34,45 @@ export const onDeleteUserActivity = /* GraphQL */ `
     }
   }
 `;
+export const onCreateEmailTemplate = /* GraphQL */ `
+  subscription OnCreateEmailTemplate {
+    onCreateEmailTemplate {
+      id
+      name
+      subject
+      htmlBody
+      textBody
+      files
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateEmailTemplate = /* GraphQL */ `
+  subscription OnUpdateEmailTemplate {
+    onUpdateEmailTemplate {
+      id
+      name
+      subject
+      htmlBody
+      textBody
+      files
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteEmailTemplate = /* GraphQL */ `
+  subscription OnDeleteEmailTemplate {
+    onDeleteEmailTemplate {
+      id
+      name
+      subject
+      htmlBody
+      textBody
+      files
+      createdAt
+      updatedAt
+    }
+  }
+`;

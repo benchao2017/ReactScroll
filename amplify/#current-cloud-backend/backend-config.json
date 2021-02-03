@@ -3,6 +3,21 @@
     "UserVisits": {
       "service": "DynamoDB",
       "providerPlugin": "awscloudformation"
+    },
+    "appstorage": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "apilambda",
+          "attributes": [
+            "Name",
+            "Arn",
+            "LambdaExecutionRole"
+          ]
+        }
+      ]
     }
   },
   "function": {
@@ -63,6 +78,14 @@
       "service": "amplifyhosting",
       "type": "cicd",
       "lastPushTimeStamp": "2021-01-24T21:52:10.348Z"
+    }
+  },
+  "auth": {
+    "glidaaamplify741ec233": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
     }
   }
 }

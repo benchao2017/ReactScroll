@@ -20,6 +20,9 @@
           "appId": "dsqawqiqetm4f",
           "type": "cicd"
         }
+      },
+      "auth": {
+        "glidaaamplify741ec233": {}
       }
     }
   }
