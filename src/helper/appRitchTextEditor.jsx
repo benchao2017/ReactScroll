@@ -15,12 +15,20 @@ import RichTextEditor from 'react-rte';
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.value !== this.state.value.toString('html')) {
+    if (nextProps.defaultValue !== this.state.value.toString('html')) {
       this.setState({
-        value: nextProps.value ?
-          RichTextEditor.createValueFromString(nextProps.value, 'html') :
+        defaultValue: nextProps.defaultValue ?
+          RichTextEditor.createValueFromString(nextProps.defaultValue, 'html') :
           RichTextEditor.createEmptyValue()
       })
+
+      if(nextProps.isLoadHtmlBody){
+        this.setState({
+          value: nextProps.defaultValue ?
+            RichTextEditor.createValueFromString(nextProps.defaultValue, 'html') :
+            RichTextEditor.createEmptyValue()
+        })
+      }
     }
   }
 
@@ -51,6 +59,7 @@ import RichTextEditor from 'react-rte';
     return (
       <RichTextEditor
         value={this.state.value}
+        defaultValue={this.state.defaultValue}
         onChange={this.onChange}
       />
     );

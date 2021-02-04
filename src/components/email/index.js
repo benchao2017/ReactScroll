@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import AppRitchTextEditor from '../../helper/appRitchTextEditor';
-import Amplify, { API, graphqlOperation } from 'aws-amplify'
+import Amplify, { API, graphqlOperation, Storage } from 'aws-amplify'
 import { onUpdateUserActivity } from '../../graphql/subscriptions'
 import { updateEmailTemplate, createEmailTemplate } from '../../graphql/mutations'
 import { listEmailTemplates } from '../../graphql/queries'
@@ -26,9 +26,11 @@ export default function Email({ }) {
 
   const [emailTemalates, setEmailTempaltes] = useState([]);
   const [selectedTempalte, setSelectedTempalte] = useState({});
-  const [htmlBody, setHtmlBody] = useState();
+  const [htmlBody, setHtmlBody] = useState('');
   const [textBody, setTextBody] = useState();
   const [subject, setSubject] = useState();
+  const [isLoadHtmlBody, setHtmlBodyLoad] = useState(false);
+
 
   useEffect(() => {
 
@@ -51,14 +53,15 @@ export default function Email({ }) {
     setSubject(item.subject);
     setHtmlBody(item.htmlBody);
     setTextBody(item.textBody);
-    console.log(item);
-    console.log(subject, htmlBody, textBody);
 
     setSelectedTempalte(item);
+
+    setHtmlBodyLoad(true);
 
   }
 
   const handleNewClick = () => {
+    setHtmlBodyLoad(true);
     setSelectedTempalte({});
     setSubject('');
     setHtmlBody('');
@@ -66,14 +69,25 @@ export default function Email({ }) {
   }
 
   const onHtmlBodyChange = (value) => {
-    setHtmlBody(value);
+    setHtmlBodyLoad(false);
+    setHtmlBody(value);  
   }
 
   const submitHandler = async (event) => {
     event.preventDefault();
 
     const { subject, textBody, files } = event.target.elements;
-    debugger;
+   console.log(files.files, files.value);
+   if(files.value)
+   {
+   const file = files.files[0];
+      Storage.put(files.value, file, {
+          contentType: file.type
+      })
+      .then (result => console.log(result))
+      .catch(err => console.log(err));
+    }
+
     if (!selectedTempalte?.id) {
       const payload = {
         name: subject.value,
@@ -87,6 +101,7 @@ export default function Email({ }) {
         console.log(template);
         setSelectedTempalte(template);
         emailTemalates.push(template);
+        setHtmlBody(template.htmlBody);
       } catch {
 
       }
@@ -108,6 +123,7 @@ export default function Email({ }) {
         console.log("emailTemplates", newEmailTemalates);
         setEmailTempaltes(newEmailTemalates);
         setSelectedTempalte(template);
+        setHtmlBody(template.htmlBody);
       } catch (ex) {
         console.log(ex);
       }
@@ -160,7 +176,7 @@ export default function Email({ }) {
               <Form onSubmit={submitHandler}>
                 <Form.Group controlId="subject">
                   <Form.Label>Subject</Form.Label>
-                  <Form.Control type="text" defaultValue={subject} placeholder="Enter subject" />
+                  <Form.Control type="text" onChange = {(event) => { setSubject(event.target.value) } } value={subject} placeholder="Enter subject" />
                   <Form.Text className="text-muted">
                     Subject line should be short and meaningful.
     </Form.Text>
@@ -170,14 +186,15 @@ export default function Email({ }) {
                   <Form.Label>Html Body</Form.Label>
 
                   <AppRitchTextEditor
-                    value={htmlBody}
+                  isLoadHtmlBody = {isLoadHtmlBody}
+                    defaultValue={htmlBody}
                     onChange={onHtmlBodyChange}
                   ></AppRitchTextEditor>
                 </Form.Group>
 
                 <Form.Group controlId="textBody">
                   <Form.Label>Text Body</Form.Label>
-                  <Form.Control as="textarea" defaultValue={textBody} rows={3} />
+                  <Form.Control as="textarea" onChange = {(event) => { setTextBody(event.target.value) } } value={textBody} rows={3} />
                 </Form.Group>
 
 
