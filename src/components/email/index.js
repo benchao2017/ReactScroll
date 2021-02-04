@@ -32,6 +32,7 @@ export default function Email({ }) {
   const [textBody, setTextBody] = useState();
   const [fileLink, setFileLink] = useState(null);
   const [subject, setSubject] = useState();
+  const [name, setName] = useState();
   const [isLoadHtmlBody, setHtmlBodyLoad] = useState(false);
   const [showProgress, setshowProgress] = useState(false);
   const [showToaster, setshowToaster] = useState(false);
@@ -60,29 +61,31 @@ export default function Email({ }) {
     setSubject(item.subject);
     setHtmlBody(item.htmlBody);
     setTextBody(item.textBody);
+    setName(item.name);
+
 
     setSelectedTempalte(item);
 
     setHtmlBodyLoad(true);
 
     if (item.id) {
-      await getFile(item.id);     
+      await getFile(item.id);
     }
 
   }
 
-  const handleDelete = async () =>{
+  const handleDelete = async () => {
     setshowProgress(true);
-    await Storage.remove(selectedTempalte.id).then(result => {     
+    await Storage.remove(selectedTempalte.id).then(result => {
       setFileLink(null);
       setshowProgress(true);
-     API.graphql(graphqlOperation(updateEmailTemplate, { input: {id: selectedTempalte.id, files: null} })).then((data)=>{
-      setshowProgress(false);
-     });     
+      API.graphql(graphqlOperation(updateEmailTemplate, { input: { id: selectedTempalte.id, files: null } })).then((data) => {
+        setshowProgress(false);
+      });
     })
-    .catch(err => {      
-      setshowProgress(false);
-    });;
+      .catch(err => {
+        setshowProgress(false);
+      });;
   }
 
   const handleNewClick = () => {
@@ -93,6 +96,7 @@ export default function Email({ }) {
     setSubject('');
     setHtmlBody('');
     setTextBody('');
+    setName('');
   }
 
   const onHtmlBodyChange = (value) => {
@@ -101,10 +105,12 @@ export default function Email({ }) {
   }
 
   const uploadFile = async (key, file) => {
+    if(!file) return;
+
     Storage.put(key, file, {
       contentType: file.type
     })
-      .then(result => {})
+      .then(result => { })
       .catch(err => console.log(err));
   }
 
@@ -112,9 +118,9 @@ export default function Email({ }) {
     Storage.get(key)
       .then(result => {
         setFileLink(result);
-       
+
       })
-      .catch(err => {       
+      .catch(err => {
         setFileLink(null);
       });
   }
@@ -123,11 +129,11 @@ export default function Email({ }) {
   const submitHandler = async (event) => {
     event.preventDefault();
     hideToast();
-    const { subject, textBody, files } = event.target.elements;
-    if (subject == undefined || subject == '') {
+    const { subject, textBody, files, name } = event.target.elements;
+    if (name == undefined || name == '') {
       return;
     }
-    
+
     setshowProgress(true);
 
     var file = null;
@@ -138,7 +144,7 @@ export default function Email({ }) {
     }
 
     let payload = {
-      name: subject.value,
+      name: name.value,
       subject: subject.value,
       htmlBody: htmlBody,
       textBody: textBody.value,
@@ -156,7 +162,7 @@ export default function Email({ }) {
         setSelectedTempalte(template);
         emailTemalates.push(template);
         setHtmlBody(template.htmlBody);
-        await uploadFile(template.id, file);
+         await uploadFile(template.id, file);
         setshowProgress(false);
         showToast();
       } catch {
@@ -188,6 +194,8 @@ export default function Email({ }) {
   }
 
   return (
+    <div>
+     
     <Container fluid>
       <Row>
         <Col><br></br></Col>
@@ -229,12 +237,23 @@ export default function Email({ }) {
           <Row>
             <Col xs={12} lg="6">
               <Form onSubmit={submitHandler}>
+                <Card>
+                  <Card.Body className="templateName">
+                    <Form.Group controlId="name">
+                      <Form.Label>Tempalte Name</Form.Label>
+                      <Form.Control type="text" onChange={(event) => { setName(event.target.value) }} value={name} />
+                      <Form.Text className="text-muted">
+                        Template Name will be visible in dropdown.
+    </Form.Text>
+                    </Form.Group>
+
+                  </Card.Body>
+                </Card>
+                <br></br>
                 <Form.Group controlId="subject">
                   <Form.Label>Subject</Form.Label>
                   <Form.Control type="text" onChange={(event) => { setSubject(event.target.value) }} value={subject} />
-                  <Form.Text className="text-muted">
-                    Subject line should be short and meaningful.
-    </Form.Text>
+
                 </Form.Group>
 
                 <Form.Group controlId="htmlBody">
@@ -257,14 +276,14 @@ export default function Email({ }) {
                   <Form.File id="files" label="Attachment" />
                   <br></br>
                   {selectedTempalte.files && fileLink && <div>Uploaded file <a href={fileLink} target="blank">{JSON.parse(selectedTempalte.files)[0].fileName}</a> &nbsp;  <Button variant="danger" onClick={handleDelete}>
-                  Remove
+                    Remove
   </Button></div>}
                 </Form.Group>
                 <br>
                 </br>
                 {showProgress && <ProgressBar animated striped variant="success" now={100} />}
 
-<br></br>
+                <br></br>
                 <Button variant="primary" type="submit">
                   Save
   </Button>
@@ -276,24 +295,21 @@ export default function Email({ }) {
           </Row>
         </Card.Body>
       </Card>
-      <Toast style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          background: 'greenyellow'
-        }} show={showToaster} onClose={hideToast}>
-          <Toast.Header>
-            <img
-              src="holder.js/20x20?text=%20"
-              className="rounded mr-2"
-              alt=""
-            />
-            <strong className="mr-auto">Success</strong>
-            <small>Just now</small>
-          </Toast.Header>
-          <Toast.Body>Template saved successfully!</Toast.Body>
-        </Toast>
+      
     </Container>
+    <Toast className="toast-style" show={showToaster} onClose={hideToast}>
+        <Toast.Header>
+          <img
+            src="holder.js/20x20?text=%20"
+            className="rounded mr-2"
+            alt=""
+          />
+          <strong className="mr-auto">Success</strong>
+          <small>Just now</small>
+        </Toast.Header>
+        <Toast.Body>Template saved successfully!</Toast.Body>
+      </Toast>
+    </div>
 
   );
 }

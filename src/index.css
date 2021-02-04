@@ -88,3 +88,15 @@ canvas{
   margin-top: 9px;
   border: solid 1px;
 }
+
+.templateName{
+  background: whitesmoke;
+}
+
+.toast-style{
+  
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: greenyellow !important;
+}

@@ -241,12 +241,7 @@ export default function CSVFileReader() {
             })}
           </tbody>
         </Table>
-        <Toast style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          background: 'greenyellow'
-        }} show={showToaster} onClose={hideToast}>
+        <Toast className="toast-style" show={showToaster} onClose={hideToast}>
           <Toast.Header>
             <img
               src="holder.js/20x20?text=%20"
