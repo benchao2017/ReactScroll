@@ -231,7 +231,7 @@ export default function Email({ }) {
               <Form onSubmit={submitHandler}>
                 <Form.Group controlId="subject">
                   <Form.Label>Subject</Form.Label>
-                  <Form.Control type="text" onChange={(event) => { setSubject(event.target.value) }} value={subject} placeholder="Enter subject" />
+                  <Form.Control type="text" onChange={(event) => { setSubject(event.target.value) }} value={subject} />
                   <Form.Text className="text-muted">
                     Subject line should be short and meaningful.
     </Form.Text>
