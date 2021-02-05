@@ -144,12 +144,12 @@ app.get(path, function (req, res) {
     let params = {};
     if(req.query.params)
     {
-      parmas = JSON.parse(req.query.params);
+      params = JSON.parse(req.query.params);
     }
     
-    parmas['TableName'] = tableClients;
+    params['TableName'] = tableClients;
      
-    console.log("Param: ", parmas);
+    console.log("Param: ", params);
 
     dynamodbClient.scan(params, (err, data) => {
       if (err) {

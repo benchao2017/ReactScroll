@@ -38,22 +38,28 @@ export default function Clients({ }) {
   const hideToast = () => setshowToaster(false);
 
   useEffect(() => {
-    const formSend = async () => {
-
-
-      let res = await fetch(`https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/visit?getAllClient=${true}`);
-
-      res.json().then((data) => {
-        let userData;
-        if (data.body) {
-          let dataBody = JSON.parse(data.body);
-          setClients(dataBody);
-          console.log(dataBody);
-        }
-      })
-    };
     formSend();
   }, []);
+
+  const formSend = async (params = null) => {
+
+    const url = `https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/visit?getAllClient=${true}`;
+
+    if (params) {
+      url += `?params=${params}`;
+    }
+
+    let res = await fetch(url);
+
+    res.json().then((data) => {
+      let userData;
+      if (data.body) {
+        let dataBody = JSON.parse(data.body);
+        setClients(dataBody);
+        console.log(dataBody);
+      }
+    })
+  };
 
   const getMaxKeyItemKeys = (array) => {
     let keyCount = 0;
@@ -152,6 +158,11 @@ export default function Clients({ }) {
     event.preventDefault();
 
     console.log(name, query);
+    if (query && query != '') {
+      formSend(query);
+    } else {
+      formSend();
+    }
   }
 
   return (
@@ -247,8 +258,8 @@ export default function Clients({ }) {
             <Row>
               {clients &&
                 <Col>
-                <h5>Search result:</h5>
-                <hr></hr>
+                  <h5>Search result:</h5>
+                  <hr></hr>
                   <Button variant="danger" onClick={handleClear}>Clear</Button>
                   <br></br>
                   <Table striped bordered hover size="sm">
