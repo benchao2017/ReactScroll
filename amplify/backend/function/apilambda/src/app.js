@@ -142,13 +142,11 @@ app.get(path, function (req, res) {
 
      //Get all client data
     let params = {};
-    console.log("Recieved Param: ", req.query.params);
     if(req.query.params)
     {
       var newStr = req.query.params.replace(/~/g, '{');
       let anotherString = newStr.replace(/\(/g, '}');
 
-      console.log("Replaced string: ", anotherString);
 
       params = JSON.parse(anotherString);
     }

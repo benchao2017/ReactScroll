@@ -32,21 +32,25 @@ export default function CSVFileReader() {
       res.json().then((data) => {
         let userData;
         if (data.body) {
-          let dataBody = JSON.parse(data.body);
-
+          let dataBody = JSON.parse(data.body); 
+          if (dataBody.length<1) {
+            setTextAreaVal('');
+            return;
+          
+          }
           let keys = Object.keys(dataBody[0]);
           setServerTableKeys(keys);
 
           let text = '';
           keys.map(key => {
-            text += key+ " ";
+            text += key + " ";
           });
           text.trim();
           text += "\n"
 
           dataBody.map((x) => {
             for (let i = 0; i < keys.length; i++) {
-              text += (x[keys[i]]==undefined)? "" : x[keys[i]] + " ";
+              text += (x[keys[i]] == undefined) ? "" : x[keys[i]] + " ";
             }
             text.trim();
             text += "\n"
@@ -75,7 +79,7 @@ export default function CSVFileReader() {
 
     let text = '';
     data.map((x) => {
-      x.data.map(y=>{
+      x.data.map(y => {
         text += y + " ";
       })
       text.trim();
@@ -101,11 +105,11 @@ export default function CSVFileReader() {
     const content = await rawResponse.json();
 
     if (content.statusCode == 200) {
-      try{
-      let keys = Object.values(Object.values(fileData[0].data)).map(val=>val.toLowerCase());
-     
-      setServerTableKeys(keys);
-      }catch{}
+      try {
+        let keys = Object.values(Object.values(fileData[0].data)).map(val => val.toLowerCase());
+
+        setServerTableKeys(keys);
+      } catch { }
       showToast();
       setshowProgress(false);
     }
@@ -134,9 +138,10 @@ export default function CSVFileReader() {
   }
 
   const handlePreview = () => {
-    if(textAreVal.length<1) {
+    if (textAreVal.length < 1) {
       setFileData(null);
-      return;}
+      return;
+    }
 
     let data = [];
     var lines = textAreVal.split('\n');
@@ -224,19 +229,19 @@ export default function CSVFileReader() {
           <thead>
             <tr>
               <th>#</th>
-              {fileData && (fileData[0]?.data).map(key=>{
-               return <th key={key} className={!serverTableKeys?.includes(key.toLowerCase())?'red-bg': 'green-bg'}>{!serverTableKeys?.includes(key.toLowerCase()) && <span className="remove-icon"></span>}{key}</th>
+              {fileData && (fileData[0]?.data).map(key => {
+                return <th key={key} className={!serverTableKeys?.includes(key.toLowerCase()) ? 'red-bg' : 'green-bg'}>{!serverTableKeys?.includes(key.toLowerCase()) && <span className="remove-icon"></span>}{key}</th>
               })}
-             
+
             </tr>
           </thead>
           <tbody>
             {fileData?.slice(1).map((x, i) => {
               return <tr key={i}>
                 <td>{i + 1}</td>
-                {x.data.map((value, i)=>{
-                  return  <td key={i}>{value}</td>
-                })}               
+                {x.data.map((value, i) => {
+                  return <td key={i}>{value}</td>
+                })}
               </tr>
             })}
           </tbody>
