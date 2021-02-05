@@ -145,8 +145,8 @@ app.get(path, function (req, res) {
     console.log("Recieved Param: ", req.query.params);
     if(req.query.params)
     {
-      var newStr = req.query.params.replace(/</g, '{');
-      let anotherString = newStr.replace(/>/g, '}');
+      var newStr = req.query.params.replace(/~/g, '{');
+      let anotherString = newStr.replace(/;/g, '}');
 
       console.log("Replaced string: ", anotherString);
 
