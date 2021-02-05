@@ -12,3 +12,9 @@ type EmailTemplate @model {
   textBody: String
   files: AWSJSON
 }
+
+type ClientQuery @model {
+  id: ID!
+  name: String
+  query: String
+}

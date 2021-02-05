@@ -192,7 +192,7 @@
           "DynamoDBBillingMode": "PAY_PER_REQUEST",
           "DynamoDBEnableServerSideEncryption": false,
           "S3DeploymentBucket": "amplify-glidaaamplify-live-84208-deployment",
-          "S3DeploymentRootKey": "amplify-appsync-files/2d63e534148ce3228a6689719c5e1cd36f23c72a",
+          "S3DeploymentRootKey": "amplify-appsync-files/0c750a6506ba19c48d63ad186d1ac1494cc91fdf",
           "env": "live"
         }
       }

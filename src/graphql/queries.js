@@ -65,3 +65,32 @@ export const listEmailTemplates = /* GraphQL */ `
     }
   }
 `;
+export const getClientQuery = /* GraphQL */ `
+  query GetClientQuery($id: ID!) {
+    getClientQuery(id: $id) {
+      id
+      name
+      query
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listClientQuerys = /* GraphQL */ `
+  query ListClientQuerys(
+    $filter: ModelClientQueryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClientQuerys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        query
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

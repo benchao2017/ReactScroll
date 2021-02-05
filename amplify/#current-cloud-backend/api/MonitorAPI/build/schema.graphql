@@ -17,6 +17,14 @@ type EmailTemplate {
   updatedAt: AWSDateTime!
 }
 
+type ClientQuery {
+  id: ID!
+  name: String
+  query: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
 enum ModelSortDirection {
   ASC
   DESC
@@ -127,6 +135,8 @@ type Query {
   listUserActivitys(filter: ModelUserActivityFilterInput, limit: Int, nextToken: String): ModelUserActivityConnection
   getEmailTemplate(id: ID!): EmailTemplate
   listEmailTemplates(filter: ModelEmailTemplateFilterInput, limit: Int, nextToken: String): ModelEmailTemplateConnection
+  getClientQuery(id: ID!): ClientQuery
+  listClientQuerys(filter: ModelClientQueryFilterInput, limit: Int, nextToken: String): ModelClientQueryConnection
 }
 
 input CreateUserActivityInput {
@@ -152,6 +162,9 @@ type Mutation {
   createEmailTemplate(input: CreateEmailTemplateInput!, condition: ModelEmailTemplateConditionInput): EmailTemplate
   updateEmailTemplate(input: UpdateEmailTemplateInput!, condition: ModelEmailTemplateConditionInput): EmailTemplate
   deleteEmailTemplate(input: DeleteEmailTemplateInput!, condition: ModelEmailTemplateConditionInput): EmailTemplate
+  createClientQuery(input: CreateClientQueryInput!, condition: ModelClientQueryConditionInput): ClientQuery
+  updateClientQuery(input: UpdateClientQueryInput!, condition: ModelClientQueryConditionInput): ClientQuery
+  deleteClientQuery(input: DeleteClientQueryInput!, condition: ModelClientQueryConditionInput): ClientQuery
 }
 
 input ModelUserActivityConditionInput {
@@ -169,6 +182,9 @@ type Subscription {
   onCreateEmailTemplate: EmailTemplate @aws_subscribe(mutations: ["createEmailTemplate"])
   onUpdateEmailTemplate: EmailTemplate @aws_subscribe(mutations: ["updateEmailTemplate"])
   onDeleteEmailTemplate: EmailTemplate @aws_subscribe(mutations: ["deleteEmailTemplate"])
+  onCreateClientQuery: ClientQuery @aws_subscribe(mutations: ["createClientQuery"])
+  onUpdateClientQuery: ClientQuery @aws_subscribe(mutations: ["updateClientQuery"])
+  onDeleteClientQuery: ClientQuery @aws_subscribe(mutations: ["deleteClientQuery"])
 }
 
 type ModelEmailTemplateConnection {
@@ -219,4 +235,42 @@ input ModelEmailTemplateConditionInput {
   and: [ModelEmailTemplateConditionInput]
   or: [ModelEmailTemplateConditionInput]
   not: ModelEmailTemplateConditionInput
+}
+
+type ModelClientQueryConnection {
+  items: [ClientQuery]
+  nextToken: String
+}
+
+input ModelClientQueryFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  query: ModelStringInput
+  and: [ModelClientQueryFilterInput]
+  or: [ModelClientQueryFilterInput]
+  not: ModelClientQueryFilterInput
+}
+
+input CreateClientQueryInput {
+  id: ID
+  name: String
+  query: String
+}
+
+input UpdateClientQueryInput {
+  id: ID!
+  name: String
+  query: String
+}
+
+input DeleteClientQueryInput {
+  id: ID
+}
+
+input ModelClientQueryConditionInput {
+  name: ModelStringInput
+  query: ModelStringInput
+  and: [ModelClientQueryConditionInput]
+  or: [ModelClientQueryConditionInput]
+  not: ModelClientQueryConditionInput
 }

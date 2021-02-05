@@ -94,3 +94,45 @@ export const deleteEmailTemplate = /* GraphQL */ `
     }
   }
 `;
+export const createClientQuery = /* GraphQL */ `
+  mutation CreateClientQuery(
+    $input: CreateClientQueryInput!
+    $condition: ModelClientQueryConditionInput
+  ) {
+    createClientQuery(input: $input, condition: $condition) {
+      id
+      name
+      query
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateClientQuery = /* GraphQL */ `
+  mutation UpdateClientQuery(
+    $input: UpdateClientQueryInput!
+    $condition: ModelClientQueryConditionInput
+  ) {
+    updateClientQuery(input: $input, condition: $condition) {
+      id
+      name
+      query
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteClientQuery = /* GraphQL */ `
+  mutation DeleteClientQuery(
+    $input: DeleteClientQueryInput!
+    $condition: ModelClientQueryConditionInput
+  ) {
+    deleteClientQuery(input: $input, condition: $condition) {
+      id
+      name
+      query
+      createdAt
+      updatedAt
+    }
+  }
+`;

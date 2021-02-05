@@ -76,3 +76,36 @@ export const onDeleteEmailTemplate = /* GraphQL */ `
     }
   }
 `;
+export const onCreateClientQuery = /* GraphQL */ `
+  subscription OnCreateClientQuery {
+    onCreateClientQuery {
+      id
+      name
+      query
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateClientQuery = /* GraphQL */ `
+  subscription OnUpdateClientQuery {
+    onUpdateClientQuery {
+      id
+      name
+      query
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteClientQuery = /* GraphQL */ `
+  subscription OnDeleteClientQuery {
+    onDeleteClientQuery {
+      id
+      name
+      query
+      createdAt
+      updatedAt
+    }
+  }
+`;
