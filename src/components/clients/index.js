@@ -47,8 +47,8 @@ export default function Clients({ }) {
 
     if (params) {
       debugger;
-      var newStr = params.replaceAll('{', '[');
-      let anotherString = newStr.replaceAll('}', ']');
+      var newStr = params.replace(/{/g, '[');
+      let anotherString = newStr.replace(/}/g, ']');
       url += `&params=${anotherString}`;
     }
     try {
