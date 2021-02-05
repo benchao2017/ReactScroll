@@ -46,9 +46,8 @@ export default function Clients({ }) {
     let url = `https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/visit?getAllClient=${true}`;
 
     if (params) {
-      debugger;
-      var newStr = params.replace(/{/g, '[');
-      let anotherString = newStr.replace(/}/g, ']');
+      var newStr = params.replace(/{/g, '<');
+      let anotherString = newStr.replace(/}/g, '>');
       url += `&params=${anotherString}`;
     }
     try {
@@ -73,6 +72,8 @@ export default function Clients({ }) {
   };
 
   const getMaxKeyItemKeys = (array) => {
+  if(array && array.length>0)
+  {
     let keyCount = 0;
     let itemToReturn = null;
 
@@ -85,6 +86,9 @@ export default function Clients({ }) {
     });
 
     return Object.keys(itemToReturn);
+  }else{
+  return [];
+  }
 
   }
 
