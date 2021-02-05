@@ -47,7 +47,7 @@ export default function Clients({ }) {
 
     if (params) {
       var newStr = params.replace(/{/g, '~');
-      let anotherString = newStr.replace(/}/g, ';');
+      let anotherString = newStr.replace(/}/g, '(');
       url += `&params=${anotherString}`;
     }
     try {
