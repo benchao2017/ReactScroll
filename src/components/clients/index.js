@@ -42,23 +42,33 @@ export default function Clients({ }) {
   }, []);
 
   const formSend = async (params = null) => {
-
-    const url = `https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/visit?getAllClient=${true}`;
+    setshowProgress(true);
+    let url = `https://i6smufsvj6.execute-api.us-east-1.amazonaws.com/live/visit?getAllClient=${true}`;
 
     if (params) {
-      url += `?params=${params}`;
+      var newStr = params.replace(/{/g, '#');
+      let anotherString = newStr.replace(/}/g, '^');
+      url += `?params=${anotherString}`;
     }
+    try {
+      let res = await fetch(url);
 
-    let res = await fetch(url);
-
-    res.json().then((data) => {
-      let userData;
-      if (data.body) {
-        let dataBody = JSON.parse(data.body);
-        setClients(dataBody);
-        console.log(dataBody);
-      }
-    })
+      res.json().then((data) => {
+        let userData;
+        if (data.body) {
+          let dataBody = JSON.parse(data.body);
+          setClients(dataBody);
+          console.log(dataBody);
+        }
+        setshowProgress(false);
+      }).catch(err => {
+        setshowProgress(false);
+        handleClear();
+      })
+    } catch {
+      setshowProgress(false);
+      handleClear();
+    }
   };
 
   const getMaxKeyItemKeys = (array) => {
@@ -109,6 +119,10 @@ export default function Clients({ }) {
 
 
   const handleSaveClick = async () => {
+
+    if(!name || name==''){
+      return;
+    }
     setshowProgress(true);
     hideToast();
     let payload = {
@@ -229,7 +243,7 @@ export default function Clients({ }) {
                   </Form.Group>
                   <Row>
                     <Col xs={4} lg="4">
-                      <Button variant="success" type="submit" onClick={handleSaveClick}>
+                      <Button variant="success" onClick={handleSaveClick}>
                         Save
               </Button>
                     </Col>

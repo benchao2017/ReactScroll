@@ -142,9 +142,13 @@ app.get(path, function (req, res) {
 
      //Get all client data
     let params = {};
+    console.log("Recieved Param: ", req.query.params);
     if(req.query.params)
     {
-      params = JSON.parse(req.query.params);
+      var newStr = req.query.params.replace(/#/g, '{');
+      let anotherString = newStr.replace(/^/g, '}');
+
+      params = JSON.parse(anotherString);
     }
     
     params['TableName'] = tableClients;
