@@ -1,0 +1,42 @@
+[
+    {
+      "key": "1",
+      "description": "This is the description of your first step."
+    },
+    {
+      "key": "2",
+      "description": "And here's your second."
+    },
+    {
+      "key": "3",
+      "description": "A third!"
+    },
+    {
+      "key": "4",
+      "description": "Fourth :)"
+    },
+    {
+      "key": "5",
+      "description": "Here's the description of your last step."
+    },
+    {
+      "key": "6",
+      "description": "Here's the description of your last step."
+    },
+    {
+      "key": "7",
+      "description": "Here's the description of your last step."
+    },
+    {
+      "key": "8",
+      "description": "Here's the description of your last step."
+    },
+    {
+      "key": "9",
+      "description": "Here's the description of your last step."
+    },
+    {
+      "key": "10",
+      "description": "Here's the description of your last step."
+    }
+]
