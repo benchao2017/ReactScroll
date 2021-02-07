@@ -14,7 +14,7 @@ import RichTextEditor from 'react-rte';
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.defaultValue !== this.state.value.toString('html')) {
       this.setState({
         defaultValue: nextProps.defaultValue ?

@@ -13,7 +13,9 @@ export default function Content() {
 
   return (
     <>
+    <React.StrictMode>
       <Scrollyteller/>
+    </React.StrictMode>
     </>
   );
 }
