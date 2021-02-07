@@ -5,7 +5,7 @@ import "../ScrollAnimation.css";
 const ScrollAnimation = () => {
   return (
     <div className="scroll-animation">
-      <div className="container">
+      <div className="container-scroll">
         <div className="chevron"></div>
         <div className="chevron"></div>
         <div className="chevron"></div>
