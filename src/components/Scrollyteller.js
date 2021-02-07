@@ -1,12 +1,5 @@
 /** @jsx jsx */
-import {
-  Component,
-  createRef,
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-} from "react";
+import { useEffect, useState } from "react";
 import { css, jsx } from "@emotion/core";
 import { Card } from "react-bootstrap";
 import { Scrollama, Step } from "react-scrollama";
@@ -21,7 +14,7 @@ import { create } from "@lottiefiles/lottie-interactivity";
 
 import VideoBackground from "./VideoBackground";
 
-import ScrollAnimation from "./ScrollAnimation";
+// import ScrollAnimation from "./ScrollAnimation";
 import Gallery from "./Gallery";
 import FlockAnimation from "./FlockAnimation";
 import WaterAnimation from "./WaterAnimation";
@@ -29,8 +22,8 @@ import WaterAnimation from "./WaterAnimation";
 import Chart from "./Chart";
 import D3Header from "./D3Header";
 
-import button from "../button.svg";
-import { TangentSpaceNormalMap } from "three";
+// import button from "../button.svg";
+// import { TangentSpaceNormalMap } from "three";
 
 //** values ​​handled in percentages, example 25 = 25% ***********/
 const fadeIn = 10; // the lottie appears completely when this percentage is reached
@@ -90,7 +83,7 @@ const narrativeStyle = css`
     text-align: center;
     padding: 10%;
     background: white;
-    width:100%
+    width: 100%;
   }
   .blurb {
     margin-left: 10%;
@@ -104,7 +97,7 @@ const narrativeStyle = css`
     margin-left: 20px;
     margin-right: 20px;
     display: flex;
-    align-items:center;
+    align-items: center;
   }
   .btn {
     color: #575757;
@@ -116,7 +109,7 @@ const narrativeStyle = css`
 
   lottie-player {
     transition: all ease 100ms;
-    height:100vh;
+    height: 100vh;
   }
 
   .main {
@@ -143,29 +136,29 @@ const narrativeStyle = css`
     }
   }
 `;
-const introBlurb = (
-  <div>
-    <br></br>
-    <p>
-      You can intro your story here, or delete this by deleting the "introBlurb"
-      constant from being defined and from being rendered. This text export from
-      goole sheet
-    </p>
-    <br></br>
-  </div>
-);
+// const introBlurb = (
+//   <div>
+//     <br></br>
+//     <p>
+//       You can intro your story here, or delete this by deleting the "introBlurb"
+//       constant from being defined and from being rendered. This text export from
+//       goole sheet
+//     </p>
+//     <br></br>
+//   </div>
+// );
 
 function Scrollyteller() {
   const [data, setData] = useState("1");
   const [progress, setProgress] = useState(0);
-  const [src, setSrc] = useState("");
+  // const [src, setSrc] = useState("");
   const [items, setItems] = useState([]);
 
   let cardScroll = items ? [...items].splice(3, items.length - 1) : null;
   cardScroll = cardScroll ? cardScroll.splice(0, cardScroll.length - 1) : null;
 
   let lotties = items ? [...items].filter((e) => e[0].frames != "") : null;
-   console.log(lotties);
+  console.log(lotties);
   useEffect(() => {
     Tabletop.init({
       key:
@@ -236,29 +229,27 @@ function Scrollyteller() {
       const auxFadeIn = fadeIn / 100;
       const auxFadeOut = fadeOut / 100;
 
-      if(!actSlide.classList.contains('video')) {
-
+      if (!actSlide.classList.contains("video")) {
         if (items.length > 1) {
           if (progress <= auxFadeIn) {
             actSlide.style.opacity = `${progress * (1 / auxFadeIn)}`;
           } else if (progress > auxFadeIn && progress < auxFadeOut) {
             actSlide.style.opacity = "1";
           } else {
-            actSlide.style.opacity = `${(1 - progress) * (1 / (1 - auxFadeOut))}`;
+            actSlide.style.opacity = `${
+              (1 - progress) * (1 / (1 - auxFadeOut))
+            }`;
           }
         }
       } else {
-
-        if (progress <= 35/100) {
+        if (progress <= 35 / 100) {
           actSlide.style.opacity = "0";
-        } else if (progress > 35/100 && progress < auxFadeOut) {
+        } else if (progress > 35 / 100 && progress < auxFadeOut) {
           actSlide.style.opacity = "1";
         } else {
           actSlide.style.opacity = "0";
         }
-
       }
-
     }
   }, [progress, data, items.length]);
 
@@ -274,7 +265,7 @@ function Scrollyteller() {
             {
               visibility: [0.1, 0.8],
               type: "seek",
-              frames: [0,  lotties[i][0].frames],
+              frames: [0, lotties[i][0].frames],
             },
           ],
         });
@@ -286,7 +277,6 @@ function Scrollyteller() {
     console.log("------------------");
     document.querySelectorAll(".left-side").forEach((lottie, index) => {
       lottie.style.display = index + 1 == data ? "block" : "none";
-     
     });
 
     // document.querySelector('.content').style.display = data >= 8 ? 'block' : 'none';
@@ -314,7 +304,7 @@ function Scrollyteller() {
           <div>
             <D3Header texts={items[0].map((e) => e.description)} />
 
-            <div className="main" style={{marginBottom:'200px'}}>
+            <div className="main" style={{ marginBottom: "200px" }}>
               <div className="graphic">
                 <lottie-player
                   className="left-side"
@@ -337,11 +327,7 @@ function Scrollyteller() {
                         flexDirection: "column",
                       }}
                     >
-                      <div
-                        className="desc"
-                        id={`desc0`}
-                        key={`0`}
-                      >
+                      <div className="desc" id={`desc0`} key={`0`}>
                         <Card>
                           <Card.Body>
                             <Card.Text>{items[1][0].description}</Card.Text>
@@ -428,7 +414,7 @@ function Scrollyteller() {
                                 className="desc"
                                 id={`desc${i + 1}-${j + 1}`}
                                 key={`${i}-${j}`}
-                                style={{height:'100vh'}}
+                                style={{ height: "100vh" }}
                               >
                                 <Card>
                                   <Card.Body>

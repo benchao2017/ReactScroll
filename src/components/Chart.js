@@ -101,7 +101,6 @@ class Chart extends React.Component {
 
   onStepEnter = (city, {currentPosition, previousPosition}) => {
     this.setState({city})
-    const el = document.querySelector(`#waypoint-${city}`)
 
 
   }

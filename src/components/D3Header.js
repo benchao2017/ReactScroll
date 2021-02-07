@@ -29,7 +29,7 @@ const D3Header = ({ texts }) => {
           <span style={{ color: "#7578bc" }}>{"{"}Explainer</span> Page<sup style={{ fontWeight: "bolder", fontSize: "20px" }}>&#8482;</sup>{"}"}
         </p>
         <div
-          class="card"
+          className="card"
           style={{
             margin: "20px",
             width: "70%",

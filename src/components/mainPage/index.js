@@ -33,9 +33,10 @@ export default function Index() {
       var payload = { id: email, cursorPosition: `${window.scrollX},${window.scrollY},${window.innerWidth},${window.innerHeight}`, phone: '+1' };
       try {
         let { data } = await API.graphql(graphqlOperation(updateUserActivity, { input: payload }));
+        console.log(data)
       } catch (ex) {
         let { _data } = await API.graphql(graphqlOperation(createUserActivity, { input: payload }));
-
+        console.log(_data)
       }
     }
 

@@ -7,7 +7,6 @@ import brain from "../brain-simple-mesh.glb";
 // import { PerspectiveCamera } from '@react-three/drei/PerspectiveCamera'
 import * as THREE from "three";
 import { OrbitControls, Stars } from "@react-three/drei";
-import { useSpring, a } from "react-spring/three"
 
 const numParticles = 2500;
 
@@ -22,10 +21,7 @@ const Brain = (props) => {
 };
 
 const Scene = () => {
-  const {
-    camera,
-    gl: { domElement },
-  } = useThree();
+  
   return (
     <>
       <Suspense fallback={null}>
