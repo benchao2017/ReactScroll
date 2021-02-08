@@ -35,9 +35,9 @@ class BarChart extends Component {
       .range([height - margin.bottom, margin.top]);
 
       this.xAxis.scale(xScale);
-      d3.select(this.refs.xAxis).transition().call(this.xAxis);
+      d3.select(this.refs.xAxis).transition().call(this.xAxis).attr("class", "axisRed");
       this.yAxis.scale(yScale);
-      d3.select(this.refs.yAxis).transition().call(this.yAxis);
+      d3.select(this.refs.yAxis).transition().call(this.yAxis).attr("class", "axisRed");
 
     const colorExtent = d3.extent(data, d => d.avg).reverse();
     const colorScale = d3

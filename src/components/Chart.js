@@ -109,7 +109,7 @@ class Chart extends React.Component {
 
   onStepExit = (city, {currentPosition, previousPosition}) => {
     if( city === "nyc" && currentPosition === "below") {
-      this.setState({city: ""})
+      this.setState({city: "nyc"})
     }
 
     const el = document.querySelector(`#waypoint-${city}`)

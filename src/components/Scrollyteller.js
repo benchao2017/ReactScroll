@@ -15,7 +15,7 @@ import { create } from "@lottiefiles/lottie-interactivity";
 import VideoBackground from "./VideoBackground";
 
 // import ScrollAnimation from "./ScrollAnimation";
-import Gallery from "./Gallery";
+import MyGallery from "./Gallery";
 import FlockAnimation from "./FlockAnimation";
 import WaterAnimation from "./WaterAnimation";
 
@@ -376,7 +376,7 @@ function Scrollyteller() {
                   } else if (left[0].slideType === "porfolio") {
                     return (
                       <div className="left-side video" key={i}>
-                        <Gallery />
+                        <MyGallery />
                       </div>
                     );
                   }
