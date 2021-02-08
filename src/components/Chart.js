@@ -5,6 +5,7 @@ import nyc from "../chart-data/nyc.js"
 import sf from "../chart-data/sf.js"
 import am from "../chart-data/am.js"
 import BarChart from "./BarChart.js"
+import { Geometry } from 'three';
 
 const styles = {
   graphic: {
@@ -68,6 +69,7 @@ const styles = {
 
 const cities = ["nyc", "sf", "am"]
 const cityNames = {"nyc": "New York City", "sf": "San Francisco", "am": "Amsterdam", "": ""}
+const cityNames2 = {"nyc": "New York City", "sf": "San Francisco", "am": "Amsterdam", "": ""}
 
 class Chart extends React.Component {
   state = {
@@ -134,8 +136,9 @@ class Chart extends React.Component {
         </div> */}
         <div className={classes.container}>
           <div className={classes.graphic}>
-            <p className={classes.title}>Mobile phone activity: <span style={{color:"#1aa3ff", padding:"3px", borderRadius:"2px"}}>{cityNames[city]}</span></p>
+          
             <BarChart width={screenWidth} height={screenHeight} data={city ? this.state.temps[city] : {} } />
+            <p className={classes.title}>Mobile phone activity: <span style={{color:"#1aa3ff", padding:"3px", borderRadius:"2px"}}>{cityNames2[city]}</span></p>
           </div>
           <div className={classes.scroller}>
             {cities.map(city => {

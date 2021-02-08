@@ -11,7 +11,8 @@ class BarChart extends Component {
   xAxis = d3.axisBottom().tickFormat(d3.timeFormat("%b"));
   yAxis = d3.axisLeft().tickFormat(d => `${d}`);
 
-
+ // xAxis = d3.axisBottom().tickFormat(d3.timeFormat("%b"));
+ // yAxis = d3.axisLeft().tickFormat(d => `${d}`);
   componentDidMount() {
     this.createChart()
   }
@@ -65,7 +66,8 @@ class BarChart extends Component {
       .attr('y', d => yScale(d.high))
       .attr('height', d => yScale(d.low) - yScale(d.high))
       .attr('fill', d => colorScale(d.avg))
-      .attr('width', 2);
+      .attr('width', 6)
+      ;
   }
 
   render() {
