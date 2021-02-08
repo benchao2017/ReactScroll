@@ -24,14 +24,7 @@ import 'photoswipe/dist/default-skin/default-skin.css'
 import { Gallery, Item } from 'react-photoswipe-gallery'
 
 const MyGallery = () => (
-  <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '240px 171px 171px',
-          gridTemplateRows: '114px 114px',
-          gridGap: 12,
-        }}
-      ></div>
+  
   <Gallery>
     <Item
       original={porfolio01}
