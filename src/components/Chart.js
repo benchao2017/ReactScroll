@@ -8,6 +8,9 @@ import BarChart from "./BarChart.js"
 import { Geometry } from 'three';
 
 const styles = {
+  axisRed: {
+    stroke:"yellow"
+  },
   graphic: {
     flexBasis:"50%",
     height:"300px",
