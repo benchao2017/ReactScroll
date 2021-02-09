@@ -497,7 +497,7 @@ function Scrollyteller() {
                 </Card.Body>
               </Card>
             </div>
-            <div
+            <a href="https://calendly.com/michaelcastleman/call"><div
               style={{
                 marginTop: "20px",
                 background: "#606060",
@@ -511,7 +511,7 @@ function Scrollyteller() {
               <span style={{ width: "max-content", color: "white" }}>
                 {items.length > 0 ? items[13][1].description : "loading..."}
               </span>
-            </div>
+            </div></a>
           </div>
         </div>
       </div>
