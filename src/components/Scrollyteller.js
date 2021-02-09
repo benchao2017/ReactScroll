@@ -497,7 +497,7 @@ function Scrollyteller() {
                 </Card.Body>
               </Card>
             </div>
-            <a href="https://calendly.com/michaelcastleman/call"><div
+            <a href="https://calendly.com/michaelcastleman/call" target="_blank"><div
               style={{
                 marginTop: "20px",
                 background: "#606060",
