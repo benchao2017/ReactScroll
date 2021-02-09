@@ -1,42 +1,42 @@
 [
     {
       "key": "1",
-      "description": "This is the description of your first step."
+      "description": "Loading..."
     },
     {
       "key": "2",
-      "description": "And here's your second."
+      "description": "Loading...."
     },
     {
       "key": "3",
-      "description": "A third!"
+      "description": "Loading..."
     },
     {
       "key": "4",
-      "description": "Fourth :)"
+      "description": "Loading..."
     },
     {
       "key": "5",
-      "description": "Here's the description of your last step."
+      "description": "Loading...."
     },
     {
       "key": "6",
-      "description": "Here's the description of your last step."
+      "description": "Loading...."
     },
     {
       "key": "7",
-      "description": "Here's the description of your last step."
+      "description": "Loading...."
     },
     {
       "key": "8",
-      "description": "Here's the description of your last step."
+      "description": "Loading...."
     },
     {
       "key": "9",
-      "description": "Here's the description of your last step."
+      "description": "Loading...."
     },
     {
       "key": "10",
-      "description": "Here's the description of your last step."
+      "description": "Loading...."
     }
 ]
