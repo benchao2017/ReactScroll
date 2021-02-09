@@ -153,7 +153,7 @@ class Chart extends React.Component {
             })}
           </div>
         </div>
-        <div style={{height:"200px"}}></div>
+        <div style={{height:"100px"}}></div>
       </div>
     );
   }

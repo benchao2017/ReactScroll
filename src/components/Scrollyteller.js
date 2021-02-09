@@ -46,7 +46,7 @@ const narrativeStyle = css`
   }
 
   .video {
-    transition: opacity ease 0.2ms;
+    transition: opacity ease 1s;
   }
 
   .graphic {
@@ -158,7 +158,7 @@ function Scrollyteller() {
   cardScroll = cardScroll ? cardScroll.splice(0, cardScroll.length - 1) : null;
 
   let lotties = items ? [...items].filter((e) => e[0].frames != "") : null;
-  console.log(lotties);
+  // console.log(lotties);
   useEffect(() => {
     Tabletop.init({
       key:
@@ -242,9 +242,10 @@ function Scrollyteller() {
           }
         }
       } else {
-        if (progress <= 35 / 100) {
+
+        if (progress <=5 / 100) {
           actSlide.style.opacity = "0";
-        } else if (progress > 35 / 100 && progress < auxFadeOut) {
+        } else if (progress > 5 / 100 && progress < auxFadeOut) {
           actSlide.style.opacity = "1";
         } else {
           actSlide.style.opacity = "0";
@@ -274,7 +275,7 @@ function Scrollyteller() {
   }, [items]);
 
   const onStepEnter = ({ data }) => {
-    console.log("------------------");
+    // console.log("------------------");
     document.querySelectorAll(".left-side").forEach((lottie, index) => {
       lottie.style.display = index + 1 == data ? "block" : "none";
     });
