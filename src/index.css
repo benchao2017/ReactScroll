@@ -105,6 +105,19 @@ body, * {
   padding:0;
 }
 
+#lightboxBackdrop button{
+  background-color: #000000b0;
+  border: 1px white solid;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  margin-top: -25px;
+}
+
+#lightboxBackdrop .close_1x3s325{
+margin-top: 0;
+}
+
 body {
   background-image: url('background.png');
   background-attachment: fixed;
