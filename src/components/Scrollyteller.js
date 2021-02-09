@@ -370,7 +370,7 @@ function Scrollyteller() {
                     if (left[0].data === "dark") {
                       return (
                         <div className="left-side video" key={i}>
-                          <WaterAnimation />
+                          <FlockAnimation />
                         </div>
                       );
                     }
@@ -464,7 +464,7 @@ function Scrollyteller() {
       </div>
 
       <div style={{ position: "relative" }}>
-        <FlockAnimation />
+        <WaterAnimation />
         <div
           style={{
             position: "absolute",
