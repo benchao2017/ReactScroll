@@ -1,4 +1,6 @@
 import React from "react";
+import { render } from 'react-dom';
+import Gallery from 'react-grid-gallery';
 
 import image1 from "../Archive/buttonSML01.png";
 import image2 from "../Archive/buttonSML02.png";
@@ -18,110 +20,63 @@ import porfolio07 from "../Archive/porfolio07.png";
 import porfolio08 from "../Archive/porfolio08.png";
 import "../Gallery.css";
 
-import 'photoswipe/dist/photoswipe.css'
-import 'photoswipe/dist/default-skin/default-skin.css'
 
-import { Gallery, Item } from 'react-photoswipe-gallery'
+const IMAGES =
+  [{
+    src: porfolio01,
+    thumbnail: image1,
+    thumbnailWidth: 170,
+    thumbnailHeight: 130,
+    // isSelected: true,
+    // caption: "After Rain (Jeshu John - designerspics.com)"
+  },
+  {
+    src: porfolio02,
+    thumbnail: image2,
+    thumbnailWidth: 170,
+    thumbnailHeight: 130,
+    // tags: [{ value: "Ocean", title: "Ocean" }, { value: "People", title: "People" }],
+    // caption: "Boats (Jeshu John - designerspics.com)"
+  }, {
+    src: porfolio03,
+    thumbnail: image3,
+    thumbnailWidth: 170,
+    thumbnailHeight: 130
+  }, {
+    src: porfolio04,
+    thumbnail: image4,
+    thumbnailWidth: 170,
+    thumbnailHeight: 130
+  }, {
+    src: porfolio05,
+    thumbnail: image5,
+    thumbnailWidth: 170,
+    thumbnailHeight: 130
+  }, {
+    src: porfolio06,
+    thumbnail: image6,
+    thumbnailWidth: 170,
+    thumbnailHeight: 130
+  }, {
+    src: porfolio07,
+    thumbnail: image7,
+    thumbnailWidth: 170,
+    thumbnailHeight: 130
+  },
+  {
+    src: porfolio08,
+    thumbnail: image8,
+    thumbnailWidth: 170,
+    thumbnailHeight: 130
+  }]
 
-const MyGallery = () => (
-  
-  <Gallery>
-    <Item
-      original={porfolio01}
-      thumbnail={porfolio01}
-      width="1024"
-      height="1024"
-    >
-      {({ ref, open }) => (
-        <img ref={ref} onClick={open} src={image1} />
-      )}
-    </Item>
-    <Item
-      original={porfolio02}
-      thumbnail={image2}
-      width="1024"
-      height="1024"
-    >
-      {({ ref, open }) => (
-        <img ref={ref} onClick={open} src={image2} />
-      )}
-    </Item>
-    <Item
-      original={porfolio03}
-      thumbnail={image3}
-      width="1024"
-      height="1024"
-    >
-      {({ ref, open }) => (
-        <img ref={ref} onClick={open} src={image3} />
-      )}
-    </Item>
-    <Item
-      original={porfolio04}
-      thumbnail={image4}
-      width="1024"
-      height="1024"
-    >
-      {({ ref, open }) => (
-        <img ref={ref} onClick={open} src={image4} />
-      )}
-    </Item>
-    <Item
-      original={porfolio05}
-      thumbnail={image5}
-      width="1024"
-      height="1024"
-    >
-      {({ ref, open }) => (
-        <img ref={ref} onClick={open} src={image5} />
-      )}
-    </Item>
-    <Item
-      original={porfolio06}
-      thumbnail={image6}
-      width="1024"
-      height="1024"
-    >
-      {({ ref, open }) => (
-        <img ref={ref} onClick={open} src={image6} />
-      )}
-    </Item>
-     <Item
-     original={porfolio07}
-     thumbnail={image7}
-     width="1024"
-     height="1024"
-   >
-     {({ ref, open }) => (
-       <img ref={ref} onClick={open} src={image7} />
-     )}
-   </Item>
-    <Item
-    original={porfolio08}
-    thumbnail={image8}
-    width="1024"
-    height="1024"
-  >
-    {({ ref, open }) => (
-      <img ref={ref} onClick={open} src={image8} />
-    )}
-  </Item>
-  </Gallery>
-)
+const MyGallery = ({ isOpen, lightboxWillClose }) => {
 
-/* const Gallery = () => {
+
   return (
-    <div className="gallery">
-      <img src={image1} alt="gallery1"></img>
-      <img src={image2} alt="gallery2"></img>
-      <img src={image3} alt="gallery3"></img>
-      <img src={image4} alt="gallery4"></img>
-      <img src={image5} alt="gallery5"></img>
-      <img src={image6} alt="gallery6"></img>
-      <img src={image7} alt="gallery7"></img>
-      <img src={image8} alt="gallery8"></img>
-    </div>
-  );
-}; */
+    <Gallery backdropClosesModal={true} enableImageSelection={false} images={IMAGES} isOpen={isOpen} lightboxWillClose={lightboxWillClose} />
+  )
+};
+
 
 export default MyGallery;
