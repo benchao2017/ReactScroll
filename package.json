@@ -42,7 +42,6 @@
     "react-spring": "^8.0.27",
     "react-three-fiber": "^5.1.7",
     "react-waypoint": "^9.0.2",
-    "resize-observer-polyfill": "^1.5.1",
     "scrollama": "^2.2.1",
     "tabletop": "^1.6.3",
     "three": "^0.122.0",
