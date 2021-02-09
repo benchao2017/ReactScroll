@@ -75,8 +75,8 @@ class BarChart extends Component {
 
     return (
       <svg width={width} height={height} ref="chart">
-        <g ref="xAxis" transform={`translate(0, ${height - margin.bottom})`} />
-        <g ref="yAxis" transform={`translate(${margin.left}, 0)`} />
+        <g ref="xAxis" transform={`translate(0, ${height - margin.bottom})`} stroke-width="5px"/>
+        <g ref="yAxis" transform={`translate(${margin.left}, 0)`} stroke-width="5px" />
       </svg>
     );
   }

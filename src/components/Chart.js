@@ -9,7 +9,8 @@ import { Geometry } from 'three';
 
 const styles = {
   axisRed: {
-    stroke:"yellow"
+    stroke:"yellow",
+    strokeWidth:"5px"
   },
   graphic: {
     flexBasis:"50%",
