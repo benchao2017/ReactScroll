@@ -64,16 +64,22 @@ function Scrollyteller() {
     document.documentElement.style.overflow = 'auto';  // firefox, chrome
     document.body.scroll = "yes"; // ie only
     window.scrollTo({ top: 0 });
+    let options = { top: document.body.scrollHeight, left: 0, behavior: 'smooth' }; // left and top are coordinates
+    window.scrollTo(options);
+    setTimeout(() => {
+      window.scrollTo({ top: 0 });
+      setOverlay(false);
+    }, 1200);
   }
 
   function unloadScrollBars() {
     document.documentElement.style.overflow = 'hidden';  // firefox, chrome
     document.body.scroll = "no"; // ie only
     window.scrollTo({ top: 0 });
+    setOverlay(true);
   }
 
   const setLoading = (val) => {
-    setOverlay(val);
     if (!val) {
       reloadScrollBars();
     } else {
@@ -111,7 +117,6 @@ function Scrollyteller() {
         }
 
         setItems(auxItems);
-        console.log(JSON.stringify(auxItems));
         setTimeout(() => {
           setLoading(false);
         }, 3000);
@@ -291,17 +296,16 @@ function Scrollyteller() {
               </div>
             </div>
 
-            <Chart texts={items[2].map((e) =>               
-              {                 
-                return <Card>
-                  <Card.Body>
-                    <Card.Text>{e.description}</Card.Text>
-                  </Card.Body>
-                </Card>
-              
-              })} 
-              
-              />
+            <Chart texts={items[2].map((e) => {
+              return <Card>
+                <Card.Body>
+                  <Card.Text>{e.description}</Card.Text>
+                </Card.Body>
+              </Card>
+
+            })}
+
+            />
           </div>
         ) : null}
 
@@ -458,9 +462,9 @@ function Scrollyteller() {
                 </Card.Body>
               </Card>
             </div> */}
-          
+
             <a href="https://calendly.com/michaelcastleman/call" target="_blank"><div
-             className="bookTimeBtn"
+              className="bookTimeBtn"
             >
               <span style={{ width: "max-content", color: "white" }}>
                 {items.length > 0 ? items[12][0].description : "loading..."}
