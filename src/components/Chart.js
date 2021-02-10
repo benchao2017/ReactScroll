@@ -37,9 +37,8 @@ const styles = {
     marginBottom:"500px",
     fontSize:"25px",
     textAlign:"center",
-    padding:'10px',
-    zIndex:1,
-    opacity:".8"
+    padding:'40px',
+    zIndex:1
   },
   scroller: {
     flexBasis:"40%",
@@ -63,7 +62,8 @@ const styles = {
     step: {
       '&:last-child': {
         marginBottom: "200px",
-      }
+      },
+      padding:'10'
     },
     description: {
       padding:"100px 250px"

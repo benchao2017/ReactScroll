@@ -32,7 +32,7 @@ const D3Header = ({ texts }) => {
           className="card"
           style={{
             margin: "20px",
-            width: "70%",
+            width: "80%",
             padding: "15px",
             opacity: "0.8",
           }}
