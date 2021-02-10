@@ -290,7 +290,17 @@ function Scrollyteller() {
               </div>
             </div>
 
-            <Chart texts={items[2].map((e) => e.description)} />
+            <Chart texts={items[2].map((e) =>               
+              {                 
+                return <Card>
+                  <Card.Body>
+                    <Card.Text>{e.description}</Card.Text>
+                  </Card.Body>
+                </Card>
+              
+              })} 
+              
+              />
           </div>
         ) : null}
 

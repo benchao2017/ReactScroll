@@ -33,10 +33,8 @@ img {
   line-height: 1.3;
 }
 .step {
-    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.25);
     text-align: center;
-    padding: 10%;
-    background: white;
+    padding: 10%;   
     width: 100%;
 }
 .card {
