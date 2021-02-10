@@ -22,6 +22,8 @@ import WaterAnimation from "./WaterAnimation";
 import Chart from "./Chart";
 import D3Header from "./D3Header";
 
+import background from "../background.png"
+
 // import button from "../button.svg";
 // import { TangentSpaceNormalMap } from "three";
 
@@ -309,6 +311,7 @@ function Scrollyteller() {
 
   return (
     <div>
+      <img src={background} alt="background" style={{position:'fixed', 'top':"0", left:'0', "width":"100vw", height:"100vh", zIndex:'-1'}}></img>
       <div css={narrativeStyle}>
         {items.length > 0 ? (
           <div>
