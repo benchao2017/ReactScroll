@@ -96,8 +96,6 @@ const narrativeStyle = css`
     min-height: 50%;
   }
   .desc {
-    margin-left: 20px;
-    margin-right: 20px;
     display: flex;
     align-items: center;
   }
@@ -257,7 +255,7 @@ function Scrollyteller() {
   }, [progress, data, items.length, isOpen]);
 
   useEffect(() => {
-    console.log(document.querySelectorAll("lottie-player"));
+
     document.querySelectorAll("lottie-player").forEach((lottie, i) => {
       lottie.addEventListener("load", function (e) {
         create({
