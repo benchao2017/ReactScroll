@@ -299,7 +299,7 @@ function Scrollyteller() {
   };
 
   const handleGalleryClick = useCallback((val) => {
-    if (val != 8) return;
+    if (val != 7) return;
     setIsGalleryOpen(true);   
   }, [isOpen]);
 
