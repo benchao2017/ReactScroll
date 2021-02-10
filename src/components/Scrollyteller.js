@@ -194,6 +194,7 @@ function Scrollyteller() {
       lottie.addEventListener("load", function (e) {
         create({
           mode: "scroll",
+          autoplay: true,
           player: `#lottie${lottie.id.split("lottie")[1]}`,
           container: `#step${lottie.id.split("lottie")[1]}`,
           actions: [
@@ -206,7 +207,7 @@ function Scrollyteller() {
         });
       });
     });
-  }, [items]);
+  }, [items, progress]);
 
   const onStepEnter = ({ data }) => {
     // console.log("------------------");
