@@ -33,7 +33,7 @@ const styles = {
   step:{
     height:"max-content",
     width:"100%",
-    backgroundColor:"whitesmoke",
+    backgroundColor:"white",
     marginBottom:"500px",
     fontSize:"25px",
     textAlign:"center",
@@ -117,7 +117,7 @@ class Chart extends React.Component {
     }
 
     const el = document.querySelector(`#waypoint-${city}`)
-    el.style.backgroundColor = 'whitesmoke';
+    el.style.backgroundColor = 'white';
 
   }
 
