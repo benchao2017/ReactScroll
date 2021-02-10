@@ -3,6 +3,8 @@ import { useEffect, useState, useCallback } from "react";
 import { css, jsx } from "@emotion/core";
 import { Card } from "react-bootstrap";
 import { Scrollama, Step } from "react-scrollama";
+import { narrativeStyle } from "../helper/constants"
+
 // import Lottie from 'react-lottie';
 import Tabletop from "tabletop";
 import scrollama from "scrollama";
@@ -23,6 +25,7 @@ import Chart from "./Chart";
 import D3Header from "./D3Header";
 
 import background from "../background.png"
+import load from "../assets/images/load.gif"
 
 // import button from "../button.svg";
 // import { TangentSpaceNormalMap } from "three";
@@ -37,105 +40,6 @@ const fadeOut = 85; // the lottie starts to disappear when this percentage is re
 
 const narration = require("../assets/data/narration.json");
 
-const narrativeStyle = css`
-  img {
-    max-width: 100%;
-  }
-  .left-side {
-    height: 100vh;
-    display: none;
-    opacity: 0;
-  }
-
-  .video {
-    transition: opacity ease 1s;
-  }
-
-  .graphic {
-    flex-basis: 50%;
-    position: sticky;
-    top: 0;
-    width: 100%;
-    height: 75vh;
-    align-self: flex-start;
-  }
-  .data {
-    font-size: 5rem;
-    text-align: center;
-  }
-
-  .card-text {
-    font-size: 18px !important;
-    line-height: 1.3;
-  }
-  .step {
-    height: max-content;
-    position: relative;
-    z-index: 100;
-    margin-top: 10px;
-    padding-top: 200px;
-    padding-bottom: 200px;
-    "&:last-child": {
-      margin-bottom: 100px;
-    }
-    font-size: 20px;
-  }
-  .card {
-    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.25);
-    text-align: center;
-    padding: 10%;
-    background: white;
-    width: 100%;
-  }
-  .blurb {
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-top: 3%;
-    text-align: center;
-    font-size: 24px;
-    min-height: 50%;
-  }
-  .desc {
-    display: flex;
-    align-items: center;
-  }
-  .btn {
-    color: #575757;
-  }
-  .card-text-s {
-    padding: 10%;
-    font-size: 24px !important;
-  }
-
-  lottie-player {
-    transition: all ease 100ms;
-    height: 100vh;
-  }
-
-  .main {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  @media screen and (max-width: 940px) {
-    .main {
-      grid-template-columns: 1fr 300px;
-    }
-  }
-
-  @media screen and (max-width: 600px) {
-    .main {
-      grid-template-columns: 1fr;
-    }
-    .step {
-      position: relative;
-      z-index: 100;
-      opacity: 0.9;
-      padding-top: 50px;
-    }
-  }
-`;
 // const introBlurb = (
 //   <div>
 //     <br></br>
@@ -154,6 +58,28 @@ function Scrollyteller() {
   // const [src, setSrc] = useState("");
   const [items, setItems] = useState([]);
   const [isOpen, setIsGalleryOpen] = useState(false);
+  const [isOverlay, setOverlay] = useState(true);
+
+  function reloadScrollBars() {
+    document.documentElement.style.overflow = 'auto';  // firefox, chrome
+    document.body.scroll = "yes"; // ie only
+    window.scrollTo({ top: 0 });
+  }
+
+  function unloadScrollBars() {
+    document.documentElement.style.overflow = 'hidden';  // firefox, chrome
+    document.body.scroll = "no"; // ie only
+    window.scrollTo({ top: 0 });
+  }
+
+  const setLoading = (val) => {
+    setOverlay(val);
+    if (!val) {
+      reloadScrollBars();
+    } else {
+      unloadScrollBars();
+    }
+  }
 
   let cardScroll = items ? [...items].splice(3, items.length - 1) : null;
   cardScroll = cardScroll ? cardScroll.splice(0, cardScroll.length - 1) : null;
@@ -161,6 +87,7 @@ function Scrollyteller() {
   let lotties = items ? [...items].filter((e) => e[0].frames != "") : null;
   // console.log(lotties);
   useEffect(() => {
+    setLoading(true);
     Tabletop.init({
       key:
         "https://docs.google.com/spreadsheets/d/1RfjhL5U0DvF1P6FtedRA4JuODHe0d1s8XbGgNKHmfdM/edit#gid=0",
@@ -184,8 +111,15 @@ function Scrollyteller() {
         }
 
         setItems(auxItems);
+        console.log(JSON.stringify(auxItems));
+        setTimeout(() => {
+          setLoading(false);
+        }, 3000);
       })
-      .catch((err) => console.warn(err));
+      .catch((err) => {
+        setLoading(false);
+        console.warn(err)
+      });
   }, []);
 
   useEffect(() => {
@@ -300,7 +234,7 @@ function Scrollyteller() {
 
   const handleGalleryClick = useCallback((val) => {
     if (val != 7) return;
-    setIsGalleryOpen(true);   
+    setIsGalleryOpen(true);
   }, [isOpen]);
 
   const handleOnclose = (event) => {
@@ -308,8 +242,13 @@ function Scrollyteller() {
   }
 
   return (
-    <div>
-      <img src={background} alt="background" style={{position:'fixed', 'top':"0", left:'0', "width":"100vw", height:"100vh", zIndex:'-1'}}></img>
+    <div >
+      {isOverlay && <div className="overlay">
+        <img src={background} alt="background" style={{ position: 'fixed', 'top': "0", left: '0', "width": "100vw", height: "100vh", zIndex: '9999999' }}></img>
+        <div className="progressBar-container"> <img src={load} alt="loading" className="loading"></img>
+        </div>
+      </div>}
+      <img src={background} alt="background" style={{ position: 'fixed', 'top': "0", left: '0', "width": "100vw", height: "100vh", zIndex: '-1' }}></img>
       <div css={narrativeStyle}>
         {items.length > 0 ? (
           <div>
@@ -386,7 +325,7 @@ function Scrollyteller() {
                   }
                 } else if (left[0].slideType === "porfolio") {
                   return (
-                    <div className="left-side video" key={i}>                      
+                    <div className="left-side video" key={i}>
                       {isOpen && <MyGallery isOpen={isOpen} lightboxWillClose={handleOnclose} />}
                       {!isOpen && <MyGallery />}
                     </div>
@@ -478,7 +417,7 @@ function Scrollyteller() {
         <WaterAnimation />
         <div
           style={{
-            position: "absolute",
+            position: "relative",
             top: "0",
             display: "grid",
             placeItems: "center",
@@ -493,7 +432,7 @@ function Scrollyteller() {
               alignItems: "center",
             }}
           >
-            <div
+            {/* <div
               style={{
                 background: "white",
                 padding: "20px",
@@ -507,20 +446,13 @@ function Scrollyteller() {
                   </Card.Text>
                 </Card.Body>
               </Card>
-            </div>
+            </div> */}
+          
             <a href="https://calendly.com/michaelcastleman/call" target="_blank"><div
-              style={{
-                marginTop: "20px",
-                background: "#606060",
-                padding: "15px 20px",
-                borderRadius: "30px",
-                border: "2px solid white",
-                width: "max-content",
-                cursor: "pointer",
-              }}
+             className="bookTimeBtn"
             >
               <span style={{ width: "max-content", color: "white" }}>
-                {items.length > 0 ? items[12][1].description : "loading..."}
+                {items.length > 0 ? items[12][0].description : "loading..."}
               </span>
             </div></a>
           </div>
