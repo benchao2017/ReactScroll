@@ -503,7 +503,7 @@ function Scrollyteller() {
               <Card>
                 <Card.Body>
                   <Card.Text>
-                    {items.length > 0 ? items[13][0].description : "loading..."}
+                    {items.length > 0 ? items[12][0].description : "loading..."}
                   </Card.Text>
                 </Card.Body>
               </Card>
@@ -520,7 +520,7 @@ function Scrollyteller() {
               }}
             >
               <span style={{ width: "max-content", color: "white" }}>
-                {items.length > 0 ? items[13][1].description : "loading..."}
+                {items.length > 0 ? items[12][1].description : "loading..."}
               </span>
             </div></a>
           </div>
