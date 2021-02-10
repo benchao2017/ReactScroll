@@ -1,20 +1,26 @@
-import React, {lazy, Suspense} from 'react';
+import React from 'react';
 import './styles.css';
 import 'intersection-observer';
 import { Switch, Route } from 'react-router-dom';
-import LoadingScreen from './components/LoadingScreen'
+import Main from './components/mainPage';
+import Admin from './components/admin'
+import Email from './components/email'
+import Clients from './components/clients'
+import Control from './components/admin/control'
 
 export default function App() {
+
+
   return (
-      <Suspense fallback={<LoadingScreen />}>
-        <Switch>
-          <Route exact path="/" component={lazy(()=>import('./components/mainPage'))} />
-          <Route path="/user/:email" component={lazy(()=>import('./components/mainPage'))} />
-          <Route path="/admin/control/:email" component={lazy(()=>import('./components/admin/control'))} />
-          <Route path="/admin"  component={lazy(()=>import('./components/admin'))} />
-          <Route path="/email" component={lazy(()=>import('./components/email'))} />
-          <Route path="/list" component={lazy(()=>import('./components/clients'))} />
-        </Switch>
-      </Suspense>
+    <>
+      <Switch>
+        <Route exact path="/" component={Main} />
+        <Route path="/user/:email" component={Main} />
+        <Route path="/admin/control/:email" component={Control} />
+        <Route path="/admin" component={Admin} />
+        <Route path="/email" component={Email} />
+        <Route path="/list" component={Clients} />
+      </Switch>
+    </>
   );
 }

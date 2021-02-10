@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { css, jsx } from "@emotion/core";
 import { Card } from "react-bootstrap";
 import { Scrollama, Step } from "react-scrollama";
@@ -18,10 +18,11 @@ import VideoBackground from "./VideoBackground";
 import MyGallery from "./Gallery";
 import FlockAnimation from "./FlockAnimation";
 import WaterAnimation from "./WaterAnimation";
-import LoadingScreen from "../components/LoadingScreen";
 
 import Chart from "./Chart";
 import D3Header from "./D3Header";
+
+import background from "../background.png"
 
 // import button from "../button.svg";
 // import { TangentSpaceNormalMap } from "three";
@@ -95,8 +96,6 @@ const narrativeStyle = css`
     min-height: 50%;
   }
   .desc {
-    margin-left: 20px;
-    margin-right: 20px;
     display: flex;
     align-items: center;
   }
@@ -154,8 +153,7 @@ function Scrollyteller() {
   const [progress, setProgress] = useState(0);
   // const [src, setSrc] = useState("");
   const [items, setItems] = useState([]);
-
-  const [loading, setLoading] = useState(true);
+  const [isOpen, setIsGalleryOpen] = useState(false);
 
   let cardScroll = items ? [...items].splice(3, items.length - 1) : null;
   cardScroll = cardScroll ? cardScroll.splice(0, cardScroll.length - 1) : null;
@@ -186,7 +184,6 @@ function Scrollyteller() {
         }
 
         setItems(auxItems);
-        setLoading(false);
       })
       .catch((err) => console.warn(err));
   }, []);
@@ -255,10 +252,10 @@ function Scrollyteller() {
         }
       }
     }
-  }, [progress, data, items.length]);
+  }, [progress, data, items.length, isOpen]);
 
   useEffect(() => {
-    console.log(document.querySelectorAll("lottie-player"));
+
     document.querySelectorAll("lottie-player").forEach((lottie, i) => {
       lottie.addEventListener("load", function (e) {
         create({
@@ -301,32 +298,121 @@ function Scrollyteller() {
     // this.setState({ progress });
   };
 
+  const handleGalleryClick = useCallback((val) => {
+    if (val != 7) return;
+    setIsGalleryOpen(true);   
+  }, [isOpen]);
+
+  const handleOnclose = (event) => {
+    setIsGalleryOpen(false);
+  }
+
   return (
-    loading
-    ? 
-      <LoadingScreen />
-    :
-      <div>
-        <div css={narrativeStyle}>
-          {items.length > 0 ? (
-            <div>
-              <D3Header texts={items[0].map((e) => e.description)} />
-              <div className="main" style={{ marginBottom: "200px" }}>
-                <div className="graphic">
-                  <lottie-player
-                    className="left-side"
-                    id={`lottie0`}
-                    mode="seek"
-                    src={items[1][0].data}
-                    key={0}
-                  ></lottie-player>
-                </div>
-                <div className="scroller">
-                  <Scrollama>
-                    <Step data={0} key={0}>
-                      <div
+    <div>
+      <img src={background} alt="background" style={{position:'fixed', 'top':"0", left:'0', "width":"100vw", height:"100vh", zIndex:'-1'}}></img>
+      <div css={narrativeStyle}>
+        {items.length > 0 ? (
+          <div>
+            <D3Header texts={items[0].map((e) => e.description)} />
+
+            <div className="main" style={{ marginBottom: "200px" }}>
+              <div className="graphic">
+                <lottie-player
+                  className="left-side"
+                  id={`lottie0`}
+                  mode="seek"
+                  src={items[1][0].data}
+                  key={0}
+                ></lottie-player>
+              </div>
+              <div className="scroller">
+                <Scrollama>
+                  <Step data={0} key={0}>
+                    <div
+                      className="step"
+                      id={`step0`}
+                      style={{
+                        marginBottom: "120px",
+                        display: "flex",
+                        justifyContent: "center",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <div className="desc" id={`desc0`} key={`0`}>
+                        <Card>
+                          <Card.Body>
+                            <Card.Text>{items[1][0].description}</Card.Text>
+                          </Card.Body>
+                        </Card>
+                      </div>
+                    </div>
+                  </Step>
+                </Scrollama>
+              </div>
+            </div>
+
+            <Chart texts={items[2].map((e) => e.description)} />
+          </div>
+        ) : null}
+
+        <div className="main">
+          <div className="graphic">
+            {items.length > 0
+              ? cardScroll.map((left, i) => {
+                if (left[0].slideType === "video") {
+                  return (
+                    <div className="left-side video" key={i}>
+                      <VideoBackground src={left[0].data} />
+                    </div>
+                  );
+                } else if (left[0].slideType === "2d") {
+                  return (
+                    <div className="left-side" key={i}>
+                      <lottie-player
+                        id={`lottie${i + 1}`}
+                        mode="seek"
+                        src={left[0].data}
+                        key={i}
+                      ></lottie-player>
+                    </div>
+                  );
+                } else if (left[0].slideType === "3d") {
+                  if (left[0].data === "dark") {
+                    return (
+                      <div className="left-side video" key={i}>
+                        <WaterAnimation />
+                      </div>
+                    );
+                  }
+                } else if (left[0].slideType === "porfolio") {
+                  return (
+                    <div className="left-side video" key={i}>                      
+                      {isOpen && <MyGallery isOpen={isOpen} lightboxWillClose={handleOnclose} />}
+                      {!isOpen && <MyGallery />}
+                    </div>
+                  );
+                }
+
+                return null;
+              })
+              : null}
+          </div>
+
+          <div className="scroller" id="scroller">
+            <Scrollama
+              onStepEnter={onStepEnter}
+              onStepExit={onStepExit}
+              progress
+              onStepProgress={onStepProgress}
+              offset={0.33}
+            >
+              {cardScroll.length > 0
+                ? cardScroll.map((narr, i) => {
+                  return (
+                    <Step data={i + 1} key={i + 1}>
+                      <div onClick={() => handleGalleryClick(i)}
                         className="step"
-                        id={`step0`}
+                        id={`step${i + 1}`}
                         style={{
                           marginBottom: "120px",
                           display: "flex",
@@ -334,194 +420,113 @@ function Scrollyteller() {
                           flexDirection: "column",
                         }}
                       >
-                        <div className="desc" id={`desc0`} key={`0`}>
-                          <Card>
-                            <Card.Body>
-                              <Card.Text>{items[1][0].description}</Card.Text>
-                            </Card.Body>
-                          </Card>
-                        </div>
+                        {narr ? (
+                          narr.map((card, j) => (
+                            <div
+                              className="desc"
+                              id={`desc${i + 1}-${j + 1}`}
+                              key={`${i}-${j}`}
+                              style={{ height: "100vh" }}
+                            >
+                              <Card>
+                                <Card.Body>
+                                  <Card.Text>{card.description}</Card.Text>
+                                </Card.Body>
+                              </Card>
+                            </div>
+                          ))
+                        ) : (
+                            <div
+                              className="desc"
+                              id={`desc${i + 1}`}
+                              key={`${i}`}
+                            >
+                              <Card>
+                                <Card.Body>
+                                  <Card.Text>Loading</Card.Text>
+                                </Card.Body>
+                              </Card>
+                            </div>
+                          )}
                       </div>
                     </Step>
-                  </Scrollama>
-                </div>
-              </div>
-
-              <Chart texts={items[2].map((e) => e.description)} />
-            </div>
-          ) : null}
-
-          <div className="main">
-            <div className="graphic">
-              {items.length > 0
-                ? cardScroll.map((left, i) => {
-                  if (left[0].slideType === "video") {
-                    return (
-                      <div className="left-side video" key={i}>
-                        <VideoBackground src={left[0].data} />
-                      </div>
-                    );
-                  } else if (left[0].slideType === "2d") {
-                    return (
-                      <div className="left-side" key={i}>
-                        <lottie-player
-                          id={`lottie${i + 1}`}
-                          mode="seek"
-                          src={left[0].data}
-                          key={i}
-                        ></lottie-player>
-                      </div>
-                    );
-                  } else if (left[0].slideType === "3d") {
-                    if (left[0].data === "dark") {
-                      return (
-                        <div className="left-side video" key={i}>
-                          <FlockAnimation />
-                        </div>
-                      );
-                    }
-                  } else if (left[0].slideType === "porfolio") {
-                    return (
-                      <div className="left-side video" key={i}>
-                        <MyGallery />
-                      </div>
-                    );
-                  }
-
-                  return null;
+                  );
                 })
-                : null}
-            </div>
-
-            <div className="scroller" id="scroller">
-              <Scrollama
-                onStepEnter={onStepEnter}
-                onStepExit={onStepExit}
-                progress
-                onStepProgress={onStepProgress}
-                offset={0.33}
-              >
-                {cardScroll.length > 0
-                  ? cardScroll.map((narr, i) => {
-                    return (
-                      <Step data={i + 1} key={i + 1}>
-                        <div
-                          className="step"
-                          id={`step${i + 1}`}
-                          style={{
-                            marginBottom: "120px",
-                            display: "flex",
-                            justifyContent: "center",
-                            flexDirection: "column",
-                          }}
-                        >
-                          {narr ? (
-                            narr.map((card, j) => (
-                              <div
-                                className="desc"
-                                id={`desc${i + 1}-${j + 1}`}
-                                key={`${i}-${j}`}
-                                style={{ height: "100vh" }}
-                              >
-                                <Card>
-                                  <Card.Body>
-                                    <Card.Text>{card.description}</Card.Text>
-                                  </Card.Body>
-                                </Card>
-                              </div>
-                            ))
-                          ) : (
-                              <div
-                                className="desc"
-                                id={`desc${i + 1}`}
-                                key={`${i}`}
-                              >
-                                <Card>
-                                  <Card.Body>
-                                    <Card.Text>Loading</Card.Text>
-                                  </Card.Body>
-                                </Card>
-                              </div>
-                            )}
-                        </div>
-                      </Step>
-                    );
-                  })
-                  : narration.map((narr) => (
-                    <Step data={narr.key} key={narr.key}>
-                      <div
-                        className="step"
-                        id={`step${narr.key}`}
-                        style={{ marginBottom: "100px" }}
-                      >
-                        <div className="desc" id={"desc" + narr.key}>
-                          <Card>
-                            <Card.Body>
-                              <Card.Text>{narr.description}</Card.Text>
-                            </Card.Body>
-                          </Card>
-                        </div>
+                : narration.map((narr) => (
+                  <Step data={narr.key} key={narr.key}>
+                    <div
+                      className="step"
+                      id={`step${narr.key}`}
+                      style={{ marginBottom: "100px" }}
+                    >
+                      <div className="desc" id={"desc" + narr.key}>
+                        <Card>
+                          <Card.Body>
+                            <Card.Text>{narr.description}</Card.Text>
+                          </Card.Body>
+                        </Card>
                       </div>
-                    </Step>
-                  ))}
-              </Scrollama>
-            </div>
+                    </div>
+                  </Step>
+                ))}
+            </Scrollama>
           </div>
         </div>
+      </div>
 
-        <div style={{ position: "relative" }}>
-          <WaterAnimation />
+      <div style={{ position: "relative" }}>
+        <WaterAnimation />
+        <div
+          style={{
+            position: "absolute",
+            top: "0",
+            display: "grid",
+            placeItems: "center",
+            width: "100%",
+            height: "100%",
+          }}
+        >
           <div
             style={{
-              position: "absolute",
-              top: "0",
-              display: "grid",
-              placeItems: "center",
-              width: "100%",
-              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
             <div
               style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
+                background: "white",
+                padding: "20px",
+                boxShadow: "2px 2px 10px white",
               }}
             >
-              <div
-                style={{
-                  background: "white",
-                  padding: "20px",
-                  boxShadow: "2px 2px 10px white",
-                }}
-              >
-                <Card>
-                  <Card.Body>
-                    <Card.Text>
-                      {items.length > 0 ? items[13][0].description : "loading..."}
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </div>
-              <a href="https://calendly.com/michaelcastleman/call" target="_blank"><div
-                style={{
-                  marginTop: "20px",
-                  background: "#606060",
-                  padding: "15px 20px",
-                  borderRadius: "30px",
-                  border: "2px solid white",
-                  width: "max-content",
-                  cursor: "pointer",
-                }}
-              >
-                <span style={{ width: "max-content", color: "white" }}>
-                  {items.length > 0 ? items[13][1].description : "loading..."}
-                </span>
-              </div></a>
+              <Card>
+                <Card.Body>
+                  <Card.Text>
+                    {items.length > 0 ? items[12][0].description : "loading..."}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
             </div>
+            <a href="https://calendly.com/michaelcastleman/call" target="_blank"><div
+              style={{
+                marginTop: "20px",
+                background: "#606060",
+                padding: "15px 20px",
+                borderRadius: "30px",
+                border: "2px solid white",
+                width: "max-content",
+                cursor: "pointer",
+              }}
+            >
+              <span style={{ width: "max-content", color: "white" }}>
+                {items.length > 0 ? items[12][1].description : "loading..."}
+              </span>
+            </div></a>
           </div>
         </div>
       </div>
+    </div>
   );
 }
 
