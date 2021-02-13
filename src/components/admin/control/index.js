@@ -33,7 +33,7 @@ export default function Index() {
   const [isScrollControlled, setScrollControl] = useState(false);
 
   const toggleScrollControl = () => {
-    setScrollControl(!isScrollControlled);    
+    setScrollControl(!isScrollControlled);
   }
 
   const setStillLoading = () => {
@@ -44,17 +44,17 @@ export default function Index() {
   }
 
 
-  
+
   const updateMousePosition = async (ev) => {
- 
-   if(!isScrollControlled) return;
-   
+
+    if (!isScrollControlled) return;
+
     if (!email) return;
 
     var payload = { id: "admin.admin", cursorPosition: `${window.scrollX},${window.scrollY},${window.innerWidth},${window.innerHeight},${email}`, phone: '+1' };
     try {
       let { data } = await API.graphql(graphqlOperation(updateUserActivity, { input: payload }));
-    } catch(ex) {
+    } catch (ex) {
       let { _data } = await API.graphql(graphqlOperation(createUserActivity, { input: payload }));
 
     }
@@ -74,7 +74,7 @@ export default function Index() {
       let x = xy[0];
       let y = xy[1];
 
-      let options = {top: y, left: x, behavior: 'smooth'}; // left and top are coordinates
+      let options = { top: y, left: x, behavior: 'smooth' }; // left and top are coordinates
       window.scrollTo(options);
     }
 
@@ -95,9 +95,9 @@ export default function Index() {
       const subscription = API.graphql(
         graphqlOperation(onUpdateUserActivity)
       ).subscribe({
-        next: (data) => {          
+        next: (data) => {
           let userActivityDetails = data.value.data.onUpdateUserActivity;
-          if(userActivityDetails?.id!=email) return;
+          if (userActivityDetails?.id != email) return;
 
           setUserActivityDetails(userActivityDetails);
           setScrollPosition(userActivityDetails);
@@ -148,11 +148,11 @@ export default function Index() {
             >
               <Card.Header>Activity details</Card.Header>
               <Card.Body>
-                <Card.Title> Window scroll position 
+                <Card.Title> Window scroll position
               </Card.Title>
                 <Card.Text>
-                <Button variant={!isScrollControlled?'danger' : 'warning'} onClick={toggleScrollControl}>{!isScrollControlled?'Take' : 'Release'} control</Button>   
-<br></br>
+                  <Button variant={!isScrollControlled ? 'danger' : 'warning'} onClick={toggleScrollControl}>{!isScrollControlled ? 'Take' : 'Release'} control</Button>
+                  <br></br>
                   scroll(X, Y) : {userActivityDetails?.cursorPosition?.split(',')[0]}, {userActivityDetails?.cursorPosition?.split(',')[1]} <br></br>
                   window(W, H) : {userActivityDetails?.cursorPosition?.split(',')[2]}, {userActivityDetails?.cursorPosition?.split(',')[3]}
                 </Card.Text>
@@ -191,8 +191,8 @@ export default function Index() {
               <Card.Body>
                 <Card.Title> Window scroll position </Card.Title>
                 <Card.Text>
-                <Button variant={!isScrollControlled?'danger' : 'warning'} onClick={toggleScrollControl}>{!isScrollControlled?'Take' : 'Release'} control</Button>   
-<br></br>
+                  <Button variant={!isScrollControlled ? 'danger' : 'warning'} onClick={toggleScrollControl}>{!isScrollControlled ? 'Take' : 'Release'} control</Button>
+                  <br></br>
                   scroll(X, Y) : {userActivityDetails?.cursorPosition?.split(',')[0]}, {userActivityDetails?.cursorPosition?.split(',')[1]} <br></br>
                   window(W, H) : {userActivityDetails?.cursorPosition?.split(',')[2]}, {userActivityDetails?.cursorPosition?.split(',')[3]}
                 </Card.Text>

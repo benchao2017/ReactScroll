@@ -14,22 +14,22 @@ extend({ OrbitControls });
 
 const Brain = (props) => {
   const gltf = useLoader(GLTFLoader, brain);
-  
-  const mat = new THREE.ShaderMaterial({  })
+
+  const mat = new THREE.ShaderMaterial({})
   // return null;
-  return <primitive object={gltf.scene} material={mat} position={[0, 0, -1200]} scale={[120,120,120]}/>;
+  return <primitive object={gltf.scene} material={mat} position={[0, 0, -1200]} scale={[120, 120, 120]} />;
 };
 
 const Scene = () => {
-  
+
   return (
     <>
       <Suspense fallback={null}>
         <ambientLight intensity={0.2} />
         <spotLight intensity={0.8} position={[300, 300, 400]} />
-       
+
         <Brain />
-        
+
       </Suspense>
     </>
   );
@@ -124,13 +124,13 @@ const Map = (props) => {
 
 
 function Dolly() {
-  
+
   // This one makes the camera move in and out
   useFrame(({ clock, camera }) => {
     camera.position.z = 50 + Math.sin(clock.getElapsedTime()) * 10;
     const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-     //console.log(document.Show.MouseX.value);
-    camera.position.y = 100-(winScroll );
+    //console.log(document.Show.MouseX.value);
+    camera.position.y = 100 - (winScroll);
   });
   return null;
 }
@@ -164,7 +164,7 @@ export default function ParticlesAnimation() {
             gl
             camera={{ position: [0, 0, 1000], far: 10000 }}
           >
-           
+
 
             <Map />
             <Scene />
