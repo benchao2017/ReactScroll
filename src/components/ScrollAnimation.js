@@ -9,7 +9,7 @@ const ScrollAnimation = () => {
         <div className="chevron"></div>
         <div className="chevron"></div>
         <div className="chevron"></div>
-        <span className="text">Scroll down</span>
+        <span className="text">Loading</span>
       </div>
     </div>
   );

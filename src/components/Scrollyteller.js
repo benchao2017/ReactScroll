@@ -18,14 +18,14 @@ import VideoBackground from "./VideoBackground";
 
 // import ScrollAnimation from "./ScrollAnimation";
 import MyGallery from "./Gallery";
-import FlockAnimation from "./FlockAnimation";
+
 import WaterAnimation from "./WaterAnimation";
 
 import Chart from "./Chart";
 import D3Header from "./D3Header";
 
-import background from "../background.png"
-import load from "../assets/images/load.gif"
+
+import ParticlesAnimation from "./ParticlesAnimation";
 
 // import button from "../button.svg";
 // import { TangentSpaceNormalMap } from "three";
@@ -244,12 +244,10 @@ function Scrollyteller() {
 
   return (
     <div >
-      {isOverlay && <div className="overlay">
-        <img src={background} alt="background" style={{ position: 'fixed', 'top': "0", left: '0', "width": "100vw", height: "100vh", zIndex: '9999999' }}></img>
-        <div className="progressBar-container"> <img src={load} alt="loading" className="loading"></img>
-        </div>
-      </div>}
-      <img src={background} alt="background" style={{ position: 'fixed', 'top': "0", left: '0', "width": "100vw", height: "100vh", zIndex: '-1' }}></img>
+      {isOverlay &&
+        <ParticlesAnimation />
+      }
+
       <div css={narrativeStyle}>
         {items.length > 0 ? (
           <div>
@@ -291,17 +289,16 @@ function Scrollyteller() {
               </div>
             </div>
 
-            <Chart texts={items[2].map((e) =>               
-              {                 
-                return <Card>
-                  <Card.Body>
-                    <Card.Text>{e.description}</Card.Text>
-                  </Card.Body>
-                </Card>
-              
-              })} 
-              
-              />
+            <Chart texts={items[2].map((e) => {
+              return <Card>
+                <Card.Body>
+                  <Card.Text>{e.description}</Card.Text>
+                </Card.Body>
+              </Card>
+
+            })}
+
+            />
           </div>
         ) : null}
 
@@ -458,9 +455,9 @@ function Scrollyteller() {
                 </Card.Body>
               </Card>
             </div> */}
-          
+
             <a href="https://calendly.com/michaelcastleman/call" target="_blank"><div
-             className="bookTimeBtn"
+              className="bookTimeBtn"
             >
               <span style={{ width: "max-content", color: "white" }}>
                 {items.length > 0 ? items[12][0].description : "loading..."}
